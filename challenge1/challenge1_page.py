@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import math
 
 if 'challenge1' not in st.session_state:
     st.session_state['challenge1'] = False
@@ -26,6 +27,19 @@ st.title('Dimensionamento de um transformador monofásico')
 st.markdown('O dimensionamento de um transformador monofásico serve para garantir que o equipamento seja capaz de atender às necessidades específicas de um sistema elétrico, operando com segurança e eficiência. Esse processo envolve calcular as capacidades elétricas adequadas.')
 st.divider()
 
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.subheader('𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐓𝐢𝐩𝐨 𝟏')
+    st.image('challenge1/models/circuito1.png', caption='1 𝑐𝑖𝑟𝑐𝑢𝑖𝑡𝑜 𝑝𝑟𝑖𝑚𝑎́𝑟𝑖𝑜 𝑒 1 𝑠𝑒𝑐𝑢𝑛𝑑𝑎́𝑟𝑖𝑜')
+with col2:
+    st.subheader('𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐓𝐢𝐩𝐨 𝟐')
+    st.image('challenge1/models/circuito2.png', caption='2 𝑐𝑖𝑟𝑐𝑢𝑖𝑡𝑜𝑠 𝑝𝑟𝑖𝑚𝑎́𝑟𝑖𝑜 𝑒 1 𝑠𝑒𝑐𝑢𝑛𝑑𝑎́𝑟𝑖𝑜\n (𝑉𝑖𝑐𝑒-𝑉𝑒𝑟𝑠𝑎)')
+with col3:
+    st.subheader('𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐓𝐢𝐩𝐨 𝟑')
+    st.image('challenge1/models/circuito3.png', caption='2 𝑐𝑖𝑟𝑐𝑢𝑖𝑡𝑜𝑠 𝑝𝑟𝑖𝑚𝑎́𝑟𝑖𝑜 𝑒 2 𝑠𝑒𝑐𝑢𝑛𝑑𝑎́𝑟𝑖𝑜')
+
+st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
@@ -41,6 +55,7 @@ with col2:
     st.markdown('• Dimensões do transformador: Núcleo e dimensões finais, peso.')
 
 st.divider()
+st.info('𝐎 𝐚𝐥𝐠𝐨𝐫𝐢𝐭𝐦𝐨 𝐢𝐫𝐚́ 𝐜𝐨𝐧𝐬𝐢𝐝𝐞𝐫𝐚𝐫 𝐚 𝐅𝐫𝐞𝐪𝐮𝐞̂𝐧𝐜𝐢𝐚 𝐩𝐚𝐝𝐫𝐚̃𝐨 𝐝𝐞 𝟓𝟎 𝐇𝐳 𝐞 𝐚 𝐏𝐨𝐭𝐞̂𝐧𝐜𝐢𝐚 𝐥𝐢𝐦𝐢𝐭𝐞 𝐝𝐞 𝟖𝟎𝟎 𝐕𝐀.')
 
 st.title('Dados de entrada')
 
@@ -80,16 +95,19 @@ with st.form('challenge1_form'):
         st.latex(fr'V_{2} = {{{Vs1}}}/{{{Vs2}}} \ V')
 
         Wp = round(1.1 * Ws, 2)
-        st.latex(fr'- Potência \ primária: W_{1} = 1,1 \cdot W_{2} = 1,1 \cdot ({{{Ws}}}) = {{{Wp}}} \ Va')
+        st.write('-*Potência primária:*')
+        st.latex(fr'W_{1} = 1,1 \cdot W_{2} = 1,1 \cdot ({{{Ws}}}) = {{{Wp}}} \ Va')
 
         Ip = round(Wp / Vp2, 2)
-        st.latex(fr'- Corrente \ primária: I_{1} = \frac{{W_{1}}}{{V_{1}}} = \frac{{{Wp}}}{{{Vp2}}} = {{{Ip}}} \ A')
+        st.write('-*Corrente primária:*')
+        st.latex(fr'I_{1} = \frac{{W_{1}}}{{V_{1}}} = \frac{{{Wp}}}{{{Vp2}}} = {{{Ip}}} \ A')
 
         Is = round(Ws / Vs2, 2)
-        st.latex(fr'- Corrente \ secundária: I_{2} = \frac{{W_{2}}}{{V_{2}}} = \frac{{{Ws}}}{{{Vs2}}} = {{{Is}}} \ A')
+        st.write('-*Corrente secundária:*')
+        st.latex(fr'I_{2} = \frac{{W_{2}}}{{V_{2}}} = \frac{{{Ws}}}{{{Vs2}}} = {{{Is}}} \ A')
 
         d = secao_condutor[secao_condutor['potencia'] > Ws]['densidade'].max()
-        st.write(f'**Escolhendo-se a densidade de corrente d = {d} A/mm², obtém-se:**')
+        st.write(f'Escolhendo-se a densidade de corrente **d = {d} A/mm²**, obtém-se:')
 
         Sp = round(Ip / d, 2)
         st.latex(fr'- Secão \ do \ condutor \ primário: S_{1} = \frac{{I_{1}}}{{d}} = \frac{{{Ip}}}{{{d}}} = {{{Sp}}} \ mm²')
@@ -108,6 +126,43 @@ with st.form('challenge1_form'):
         st.latex(fr'd₁ = \frac{{I₁}}{{S₁}} = \frac{{{Ip}}}{{{Sp}}} = {{{dp}}} \ A/mm²')
         ds = round(Is / secao2, 2)
         st.latex(fr'd₂ = \frac{{I₂}}{{S₂}} = \frac{{{Is}}}{{{Ss}}} = {{{ds}}} \ A/mm²')
-        st.write('**Para o cálculo da perda no cobre considera-se a densidade média de:**')
+        st.write('Para o cálculo da perda no cobre considera-se a densidade média de:')
         d_mean = round((dp + ds) / 2, 2)
         st.latex(fr'd = {{{d_mean}}} \ A/mm²')
+
+        st.write('-*Seção magnética do núcleo:* como o transformador possui um circuito primário e um circuito secundário, emprega-se a fórmula:')
+        Sm = round(7.5 * math.sqrt(Ws / 50), 2)
+        st.latex(fr'S_{{m}} = 7,5 \sqrt{{ \frac{{W_{2}}}{{f}} }} = 7,5 \sqrt{{ \frac{{{Ws}}}{{50}} }} = 7,5 \sqrt {{{Ws / 50}}} = {{{Sm}}} \ cm²')
+        Sg = round(1.1 * Sm, 2)
+        st.latex(fr'S_{{g}} = 1,1 \cdot S_{{m}} = 1,1 \cdot {{{Sm}}} = {{{Sg}}} \ cm²')
+
+        n_lamina = laminas[laminas['a'] >= math.sqrt(Sg)].index[0]
+        a = laminas['a'][n_lamina]
+        b = round(Sg / a)
+        Sg = round(a * b, 2)
+        Sm = round(Sg / 1.1, 2)
+        st.write(f'Dimensões do núcleo central **[{a}] X [{b}] cm**. Emprega-se a lâmina padronizada n.º {n_lamina}, resultando o comprimento do núcleo de **{a} cm**. Nestas condições, as dimensões efetivas do núcleo central resultam:')
+        st.latex(fr'S_{{g}} = ({{{a}}}) \cdot ({{{b}}}) = {{{Sg}}} \ cm²; \quad S_{{m}} = \frac{{S_{{g}}}}{{1.1}} = \frac{{{Sg}}}{{1.1}} = {{{Sm}}} \ cm²')
+
+        st.write('-*Espiras:* Sendo a frequência de 50 Hz, as espiras por volt resultam:')
+        Esp_Volt = round(40 / Sm, 2)
+        st.latex(fr'Esp/volt = \frac{{40}}{{S_{{m}}}} = \frac{{40}}{{{Sm}}} = {{{Esp_Volt}}}')
+
+        st.write(f'As espiras do circuito primário cuja tensão é {Vp2} volts, resultam:')
+
+        Np = round(Esp_Volt * Vp2, 2)
+        st.latex(fr'N_{1} = {{{Esp_Volt}}} \cdot V_{1} = {{{Esp_Volt}}} \cdot {{{Vp2}}} = {{{Np}}}')
+
+        st.write('As espiras secundárias devem ser acrescidas de 10% a fim de compensar as quedas de tensão, isto é:')
+
+        Ns = round(Esp_Volt * Vs2 * 1.1, 2)
+        st.latex(fr'N_{2} = ({{{Esp_Volt}}}) \cdot (V_{2}) \cdot (1.1) = ({{{Esp_Volt}}}) \cdot ({{{Vs2}}}) \cdot (1.1) = {{{Ns}}}')
+        
+        st.divider()
+        col1, col2 = st.columns(2)
+        col1.subheader('Transformador Tipo 1')
+        col1.markdown('1 circuito no primário e 1 circuito no secundário')
+        col2.image('challenge1/models/circuito1.png')
+        st.write('**N.B. O esquema do transformador toma a forma indicada na figura.**')
+
+    

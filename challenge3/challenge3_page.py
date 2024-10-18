@@ -1,10 +1,6 @@
 import streamlit as st
 import math
 
-st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟑]')
-
-st.title('Determinação dos parâmetros do transformador monofásico')
-
 # Função para conversão de alta para baixa ou baixa para alta
 def converter(valor, n, lado_entrada, lado_saida):
     if lado_entrada == "Baixa Tensão" and lado_saida == "Alta Tensão":
@@ -31,27 +27,55 @@ def calcular_parametros_curto_circuito(Vcc, Icc, Pcc):
     Xeq = math.sqrt(Zcc**2 - Req**2)  # Reatância equivalente
     return Req, Zcc, Xeq  # Retorna 3 valores
 
+st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟑]')
+st.title('Determinação dos parâmetros do transformador monofásico')
+
+st.markdown('Coloca um texto aqui explicando do que se trata a seção.')
+st.divider()
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚')
+    st.markdown('• Ensaio de Circuito Aberto: Vca/ Ica/Pca')
+    st.markdown('• Ensaio de Curto-circuito: Vcc/Icc/Pcc')
+with col2:
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚𝐢́𝐝𝐚')
+    st.markdown('• Parâmetros do transformador')
+    st.markdown('• Característica fasorial do transformador')
+    st.markdown('• Imagem ilustrando os parâmetros do transformador')
+
+st.divider()
+
 # Interface do Streamlit
-st.title("Cálculo de Parâmetros do Transformador")
+st.title("Dados de Entrada")
+col1, col2 = st.columns(2)
 
 # Relação de transformação
-n = st.number_input("Relação de Transformação (n = V_alta / V_baixa)", value=20.0)
+n = col1.number_input("Relação de Transformação [𝐧 = 𝐕_𝐚𝐥𝐭𝐚 / 𝐕_𝐛𝐚𝐢𝐱𝐚]", value=20.0)
 
 # Escolha da saída (alta ou baixa tensão)
-lado_saida = st.radio("Deseja que os resultados sejam referidos ao lado de:", ("Alta Tensão", "Baixa Tensão"))
+lado_saida = col2.radio("Deseja que os resultados sejam referidos ao lado de:", ("Alta Tensão", "Baixa Tensão"))
 
 # Escolha do tipo de ensaio
 tipo_ensaio = st.selectbox("Escolha o tipo de ensaio", ["Circuito Aberto", "Curto-Circuito"])
+st.divider()
 
 # Exibição dos inputs com base na escolha
 if tipo_ensaio == "Circuito Aberto":
+
     st.subheader("Dados para Ensaio de Circuito Aberto")
-    Vca = st.number_input("Tensão Circuito Aberto (Vca)", value=240.0)
-    lado_Vca = st.radio("A tensão (Vca) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vca")
-    Ica = st.number_input("Corrente Circuito Aberto (Ica)", value=1.8)
-    lado_Ica = st.radio("A corrente (Ica) está em:", ("Alta Tensão", "Baixa Tensão"), key="Ica")
-    Pca = st.number_input("Potência Circuito Aberto (Pca)", value=154.0)
-    lado_Pca = st.radio("A potência (Pca) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pca")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        Vca = st.number_input("Tensão Circuito Aberto (𝐕𝐜𝐚)", value=240.0)
+        lado_Vca = st.radio("A tensão (𝐕𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vca")
+    with col2:
+        Ica = st.number_input("Corrente Circuito Aberto (𝐈𝐜𝐚)", value=1.8)
+        lado_Ica = st.radio("A corrente (𝐈𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Ica")
+    with col3:
+        Pca = st.number_input("Potência Circuito Aberto (𝐏𝐜𝐚)", value=154.0)
+        lado_Pca = st.radio("A potência (𝐏𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pca")
     
     # Conversão dos valores para o lado de saída
     Vca_conv = converter(Vca, n, lado_Vca, lado_saida)
@@ -79,13 +103,19 @@ if tipo_ensaio == "Circuito Aberto":
         st.latex(f"X_m = \\sqrt{{{Zphi:.2f}^2 - {Rc:.2f}^2}} = {Xm:.2f} \, \text{{ohms}}")
 
 elif tipo_ensaio == "Curto-Circuito":
+
     st.subheader("Dados para Ensaio de Curto-Circuito")
-    Vcc = st.number_input("Tensão Curto-Circuito (Vcc)", value=350.0)
-    lado_Vcc = st.radio("A tensão (Vcc) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vcc")
-    Icc = st.number_input("Corrente Curto-Circuito (Icc)", value=2.07)
-    lado_Icc = st.radio("A corrente (Icc) está em:", ("Alta Tensão", "Baixa Tensão"), key="Icc")
-    Pcc = st.number_input("Potência Curto-Circuito (Pcc)", value=210.0)
-    lado_Pcc = st.radio("A potência (Pcc) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pcc")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        Vcc = st.number_input("Tensão Curto-Circuito (𝐕𝐜𝐜)", value=350.0)
+        lado_Vcc = st.radio("A tensão (𝐕𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vcc")
+    with col2:
+        Icc = st.number_input("Corrente Curto-Circuito (𝐈𝐜𝐜)", value=2.07)
+        lado_Icc = st.radio("A corrente (𝐈𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Icc")
+    with col3:
+        Pcc = st.number_input("Potência Curto-Circuito (𝐏𝐜𝐜)", value=210.0)
+        lado_Pcc = st.radio("A potência (𝐏𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pcc")
     
     # Conversão dos valores para o lado de saída
     Vcc_conv = converter(Vcc, n, lado_Vcc, lado_saida)
