@@ -46,13 +46,12 @@ if submit_button or st.session_state['transformer_challenge']:
         # fator de potência adiantado (fase positiva)
         i_carga_complexa = i_carga * (st.session_state['fp_carga'] + 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
 
-    fase_i_carga_rad = np.angle(i_carga_complexa)
-    fase_i_carga_graus = np.degrees(fase_i_carga_rad)
+    fase_i_carga_graus = np.degrees(np.angle(i_carga_complexa))
 
     queda_tensao = i_carga_complexa * z_eq  # (ΔV)
 
     # tensão secundária em carga
-    v_full_load = v_secundaria # - abs(queda_tensao)
+    v_full_load = v_secundaria  # - abs(queda_tensao)
 
     # tensão sem carga considerando a queda de tensão
     v_no_load = v_secundaria + queda_tensao
@@ -64,7 +63,6 @@ if submit_button or st.session_state['transformer_challenge']:
     st.latex(f'I_{{\\text{{carga}}}} = \\frac{{{p_carga:.2f}}}{{{v_secundaria:.2f}}} = {i_carga:.2f} \\text{{ A}}')
     st.latex(f'I_{{\\text{{cargaComplexa}}}} = {i_carga_complexa}')
     st.latex(f'\\Delta V = I_{{\\text{{carga}}}} \\times Z_{{\\text{{eq}}}} = ({i_carga_complexa:.2f}) \\times ({z_eq.real} + j{z_eq.imag}) = {queda_tensao:.2f} \\text{{ V}}')
-    st.latex(f'\\text{{Ângulo de fase (φ) =}} {fase_i_carga_graus:.2f}º')
     st.write(f'Convertendo esse valor ΔV para absoluto...')
     st.latex(f'\\Delta V = {abs(queda_tensao)}')
     st.latex(f'\\Delta V =~ {abs(queda_tensao):.2f}')
@@ -91,32 +89,29 @@ if submit_button or st.session_state['transformer_challenge']:
 
     # ------------------ diagrama fasorial ------------------ #
     
-    # ângulo de fase em radianos
-    angulo_fase_rad = np.deg2rad(fase_i_carga_graus)
-
-    # Vetor da corrente ajustada
-    i_carga_ajustada = abs(i_carga_complexa) * np.exp(1j * angulo_fase_rad)
-
     # Diagrama normalizado
     fig_normalizado, ax_normalizado = plt.subplots()
-
+    
     # Vetor da tensão nominal secundária (V_secundaria)
     ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Nominal Secundária', linewidth=2)
 
     # Vetor da tensão sem carga (V_no_load)
     ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Sem Carga', linewidth=2)
 
-    # Vetor da corrente ajustada
-    ax_normalizado.quiver(0, 0, np.real(i_carga_ajustada), np.imag(i_carga_ajustada), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente Ajustada', linewidth=2)
+    # Vetor da corrente (I_carga_complexa), deslocado pelo ângulo
+    angulo_ic_rad = np.radians(fase_i_carga_graus)  # converte para radianos
+
+    # escala para possibilitar vermos o vetor de corrente
+    fator_escala = 15
+    ax_normalizado.quiver(0, 0, fator_escala * i_carga * np.cos(angulo_ic_rad), fator_escala * i_carga * np.sin(angulo_ic_rad), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
 
     # Configurações do gráfico
     ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo X
     ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo Y
-    ax_normalizado.set_xlabel('Parte Real')
-    ax_normalizado.set_ylabel('Parte Imaginária')
-    ax_normalizado.axhline(0, color='black', lw=0.5)
-    ax_normalizado.axvline(0, color='black', lw=0.5)
+    ax_normalizado.axhline(0, color='black', lw=0.5, ls='--')
+    ax_normalizado.axvline(0, color='black', lw=0.5, ls='--')
     ax_normalizado.grid()
+    ax_normalizado.set_aspect('equal')
     ax_normalizado.set_title('Diagrama Fasorial Normalizado')
     ax_normalizado.legend()
 
