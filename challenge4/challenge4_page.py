@@ -92,10 +92,10 @@ if submit_button or st.session_state['transformer_challenge']:
     fig_normalizado, ax_normalizado = plt.subplots()
     
     # vetor da tensão nominal secundária (V_secundaria)
-    ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Nominal Secundária', linewidth=2)
+    ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='blue', label='Tensão Secundária (Plena Carga)', linewidth=2)
 
     # vetor da tensão sem carga (V_no_load)
-    ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Sem Carga', linewidth=2)
+    ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Secundária (Sem Carga)', linewidth=2)
 
     # vetor da corrente (I_carga_complexa), deslocado pelo ângulo
     angulo_ic_rad = np.radians(fase_i_carga_graus)
@@ -112,16 +112,14 @@ if submit_button or st.session_state['transformer_challenge']:
     angulo_diferenca_rad = angulo_v_no_load_rad - angulo_v_secundaria_rad
     angulo_diferenca_graus = np.degrees(angulo_diferenca_rad)
 
-    st.write(f'**Ângulo entre os vetores de tensão:** {angulo_diferenca_graus:.2f}°')
-
     # configurações do gráfico
-    ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo X
-    ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo Y
+    ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
+    ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
     ax_normalizado.axhline(0, color='black', lw=0.5, ls='--')
     ax_normalizado.axvline(0, color='black', lw=0.5, ls='--')
     ax_normalizado.grid()
     ax_normalizado.set_aspect('equal')
-    ax_normalizado.set_title('Diagrama Fasorial Normalizado')
+    ax_normalizado.set_title('Diagrama Fasorial')
     ax_normalizado.legend()
 
     # exibir angulo entre tensões
