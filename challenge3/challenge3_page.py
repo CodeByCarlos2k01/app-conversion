@@ -30,7 +30,9 @@ def calcular_parametros_curto_circuito(Vcc, Icc, Pcc):
 st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟑]')
 st.title('Determinação dos parâmetros do transformador monofásico')
 
-st.markdown('Coloca um texto aqui explicando do que se trata a seção.')
+st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios 
+de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
+calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
 st.divider()
 
 col1, col2 = st.columns(2)

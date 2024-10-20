@@ -25,6 +25,8 @@ st.markdown('O dimensionamento de um transformador monofásico serve para garant
 st.subheader(':blue[𝟐.] 𝐂𝐮𝐫𝐯𝐚 𝐝𝐚 𝐂𝐨𝐫𝐫𝐞𝐧𝐭𝐞 𝐝𝐞 𝐌𝐚𝐠𝐧𝐞𝐭𝐢𝐳𝐚𝐜̧𝐚̃𝐨')
 st.markdown('Coloca o texto da seção 2 aqui')
 st.subheader(':blue[𝟑.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐞 𝐏𝐚𝐫𝐚̂𝐦𝐞𝐭𝐫𝐨𝐬 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
-st.markdown('Coloca o texto da seção 3 aqui')
+st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios 
+de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
+calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
 st.subheader(':blue[𝟒.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐚 𝐑𝐞𝐠𝐮𝐥𝐚𝐜̧𝐚̃𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('Coloca o texto da seção 4 aqui')
