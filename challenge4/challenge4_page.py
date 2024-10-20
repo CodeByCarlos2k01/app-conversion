@@ -35,15 +35,15 @@ if submit_button or st.session_state['transformer_challenge']:
     v_secundaria = st.session_state['v_secundaria']
     z_eq = complex(st.session_state['z_eq_real'], st.session_state['z_eq_imag'])  # impedância como número complexo
 
-    # Corrente de carga (Ic)
+    # corrente de carga (Ic)
     i_carga = p_carga / v_secundaria
 
     # Ajuste de corrente pela componente reativa
     if st.session_state['fp_tipo'] == 'Atrasado':
-        # Fator de potência atrasado (fase negativa)
+        # fator de potência atrasado (fase negativa)
         i_carga_complexa = i_carga * (st.session_state['fp_carga'] - 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
     else:
-        # Fator de potência adiantado (fase positiva)
+        # fator de potência adiantado (fase positiva)
         i_carga_complexa = i_carga * (st.session_state['fp_carga'] + 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
 
     fase_i_carga_rad = np.angle(i_carga_complexa)
@@ -57,7 +57,7 @@ if submit_button or st.session_state['transformer_challenge']:
     # tensão sem carga considerando a queda de tensão
     v_no_load = v_secundaria + queda_tensao
 
-    # Cálculo da regulação
+    # cálculo da regulação
     regulacao = ((abs(v_no_load) - abs(v_full_load)) / abs(v_full_load)) * 100
 
     st.write('Vamos realizar os cálculos usando os valores inseridos:')
@@ -89,35 +89,35 @@ if submit_button or st.session_state['transformer_challenge']:
     else:
         st.error("*Avaliação:* Inaceitável. A regulação é muito alta, indicando que o transformador não é adequado para a maioria das aplicações.")
 
-    ## ------------------ diagrama fasorial ------------------ ##
-    fig_real, ax_real = plt.subplots()
-    ax_real.quiver(0, 0, np.real(i_carga_complexa), np.imag(i_carga_complexa), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
-    ax_real.quiver(0, 0, np.real(queda_tensao), np.imag(queda_tensao), angles='xy', scale_units='xy', scale=1, color='b', label='Queda de Tensão', linewidth=2)
-    ax_real.quiver(0, 0, v_secundaria, 0, angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Secundária', linewidth=2)
+    # ------------------ diagrama fasorial ------------------ #
+    
+    # ângulo de fase em radianos
+    angulo_fase_rad = np.deg2rad(fase_i_carga_graus)
 
-    plt.xlim(-1.5 * abs(v_secundaria), 1.5 * abs(v_secundaria))
-    plt.ylim(-1.5 * abs(v_secundaria), 1.5 * abs(v_secundaria))
-    plt.axhline(0, color='black', linewidth=0.8)
-    plt.axvline(0, color='black', linewidth=0.8)
-    plt.title('Diagrama Fasorial do Transformador')
-    plt.xlabel('Parte Real (V)')
-    plt.ylabel('Parte Imaginária (V)')
-    plt.legend()
-    st.pyplot(fig_real)
+    # Vetor da corrente ajustada
+    i_carga_ajustada = abs(i_carga_complexa) * np.exp(1j * angulo_fase_rad)
 
-    ## ------------------ diagrama fasorial normalizado ------------------ ##
-    fig_normalized, ax_normalized = plt.subplots()
-    max_magnitude = max(abs(v_secundaria), abs(i_carga_complexa), abs(queda_tensao))
-    ax_normalized.quiver(0, 0, np.real(i_carga_complexa) / max_magnitude, np.imag(i_carga_complexa) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
-    ax_normalized.quiver(0, 0, np.real(queda_tensao) / max_magnitude, np.imag(queda_tensao) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='b', label='Queda de Tensão', linewidth=2)
-    ax_normalized.quiver(0, 0, v_secundaria / max_magnitude, 0, angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Secundária', linewidth=2)
+    # Diagrama normalizado
+    fig_normalizado, ax_normalizado = plt.subplots()
 
-    plt.xlim(-1.5, 1.5)
-    plt.ylim(-1.5, 1.5)
-    plt.axhline(0, color='black', linewidth=0.8)
-    plt.axvline(0, color='black', linewidth=0.8)
-    plt.title('Diagrama Fasorial Normalizado do Transformador')
-    plt.xlabel('Parte Real (V)')
-    plt.ylabel('Parte Imaginária (V)')
-    plt.legend()
-    st.pyplot(fig_normalized)
+    # Vetor da tensão nominal secundária (V_secundaria)
+    ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Nominal Secundária', linewidth=2)
+
+    # Vetor da tensão sem carga (V_no_load)
+    ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Sem Carga', linewidth=2)
+
+    # Vetor da corrente ajustada
+    ax_normalizado.quiver(0, 0, np.real(i_carga_ajustada), np.imag(i_carga_ajustada), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente Ajustada', linewidth=2)
+
+    # Configurações do gráfico
+    ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo X
+    ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo Y
+    ax_normalizado.set_xlabel('Parte Real')
+    ax_normalizado.set_ylabel('Parte Imaginária')
+    ax_normalizado.axhline(0, color='black', lw=0.5)
+    ax_normalizado.axvline(0, color='black', lw=0.5)
+    ax_normalizado.grid()
+    ax_normalizado.set_title('Diagrama Fasorial Normalizado')
+    ax_normalizado.legend()
+
+    st.pyplot(fig_normalizado)
