@@ -110,48 +110,54 @@ if submit_button or st.session_state['transformer_challenge']:
 
     # ------------------ diagrama fasorial ------------------ #
     
-    fig_normalizado, ax_normalizado = plt.subplots()
-    
-    # vetor da tensão nominal secundária (V_secundaria)
-    ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='blue', label='Tensão Secundária (Plena Carga)', linewidth=2)
+    try:
+        fig_normalizado, ax_normalizado = plt.subplots()
+        
+        # vetor da tensão nominal secundária (V_secundaria)
+        ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='blue', label='Tensão Secundária (Plena Carga)', linewidth=2)
 
-    # vetor da tensão sem carga (V_no_load)
-    ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Secundária (Sem Carga)', linewidth=2)
+        # vetor da tensão sem carga (V_no_load)
+        ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Secundária (Sem Carga)', linewidth=2)
 
-    # vetor da corrente (I_carga_complexa), deslocado pelo ângulo
-    angulo_ic_rad = np.radians(fase_i_carga_graus)
+        # vetor da corrente (I_carga_complexa), deslocado pelo ângulo
+        angulo_ic_rad = np.radians(fase_i_carga_graus)
 
-    # escala para possibilitar vermos o vetor de corrente
-    fator_escala = 15
-    ax_normalizado.quiver(0, 0, fator_escala * i_carga * np.cos(angulo_ic_rad), fator_escala * i_carga * np.sin(angulo_ic_rad), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
+        # escala para possibilitar vermos o vetor de corrente
+        if v_secundaria > 1000:
+            fator_escala = 10
+        else:
+            fator_escala = 1.5
+        ax_normalizado.quiver(0, 0, fator_escala * i_carga * np.cos(angulo_ic_rad), fator_escala * i_carga * np.sin(angulo_ic_rad), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
 
-    # cálculo dos ângulos dos vetores de tensão
-    angulo_v_secundaria_rad = np.angle(v_secundaria)
-    angulo_v_no_load_rad = np.angle(v_no_load)
+        # cálculo dos ângulos dos vetores de tensão
+        angulo_v_secundaria_rad = np.angle(v_secundaria)
+        angulo_v_no_load_rad = np.angle(v_no_load)
 
-    # diferença de ângulo entre os vetores de tensão
-    angulo_diferenca_rad = angulo_v_no_load_rad - angulo_v_secundaria_rad
-    angulo_diferenca_graus = np.degrees(angulo_diferenca_rad)
+        # diferença de ângulo entre os vetores de tensão
+        angulo_diferenca_rad = angulo_v_no_load_rad - angulo_v_secundaria_rad
+        angulo_diferenca_graus = np.degrees(angulo_diferenca_rad)
 
-    # configurações do gráfico
-    ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
-    ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
-    ax_normalizado.axhline(0, color='black', lw=0.5, ls='--')
-    ax_normalizado.axvline(0, color='black', lw=0.5, ls='--')
-    ax_normalizado.grid()
-    ax_normalizado.set_aspect('equal')
-    ax_normalizado.set_title('Diagrama Fasorial')
-    ax_normalizado.legend()
+        # configurações do gráfico
+        ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
+        ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria)) 
+        ax_normalizado.axhline(0, color='black', lw=0.5, ls='--')
+        ax_normalizado.axvline(0, color='black', lw=0.5, ls='--')
+        ax_normalizado.grid()
+        ax_normalizado.set_aspect('equal')
+        ax_normalizado.set_title('Diagrama Fasorial')
+        ax_normalizado.legend()
 
-    # exibir angulo entre tensões
-    posicao_x = (np.real(v_no_load) + np.real(v_secundaria)) / 2  
-    posicao_y = -0.5 * abs(v_secundaria)
-    angulo_tensoes_texto = f'Ângulo entre tensões: {angulo_diferenca_graus:.2f}°'
-    angulo_corrente_texto = f'Ângulo da corrente: {fase_i_carga_graus:.2f}°'
 
-    ax_normalizado.text(posicao_x, posicao_y, angulo_tensoes_texto, fontsize=8, ha='center', color='black')
-    ax_normalizado.text(posicao_x, posicao_y*1.4, angulo_corrente_texto, fontsize=8, ha='center', color='black')
+        posicao_x = -1.0 * abs(v_secundaria) 
+        posicao_y = -1.0 * abs(v_secundaria)   
+        angulo_tensoes_texto = f'Ângulo entre tensões: {angulo_diferenca_graus:.2f}°'
+        angulo_corrente_texto = f'Ângulo da corrente: {fase_i_carga_graus:.2f}°'
 
-    st.pyplot(fig_normalizado)
+        ax_normalizado.text(posicao_x, posicao_y, angulo_tensoes_texto, fontsize=8, ha='center', color='black')
+        ax_normalizado.text(posicao_x, posicao_y*1.4, angulo_corrente_texto, fontsize=8, ha='center', color='black')
 
-    st.write(f'**O valor da corrente no gráfico foi multiplicado por 15 para melhor visualização do seu vetor.*')
+        st.pyplot(fig_normalizado)
+
+        st.write(f'**O valor da corrente no gráfico foi multiplicado por {fator_escala} para melhor visualização do seu vetor.*')
+    except Exception as e:
+        st.error('Ocorreu um erro ao gerar o gráfico, possivelmente devido a parâmetros inconsistentes.')
