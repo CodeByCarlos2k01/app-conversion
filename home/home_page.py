@@ -29,4 +29,4 @@ st.markdown('''A determinação dos parâmetros do transformador monofásico é 
 de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
 calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
 st.subheader(':blue[𝟒.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐚 𝐑𝐞𝐠𝐮𝐥𝐚𝐜̧𝐚̃𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
-st.markdown('Coloca o texto da seção 4 aqui')
+st.markdown('Calcular a regulação de um transformador é fundamental para garantir que ele funcione eficientemente em diversas condições de carga, assegurando a qualidade da energia, otimizando o desempenho do sistema e permitindo um planejamento de manutenção mais eficaz. ')
