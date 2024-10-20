@@ -89,23 +89,32 @@ if submit_button or st.session_state['transformer_challenge']:
 
     # ------------------ diagrama fasorial ------------------ #
     
-    # Diagrama normalizado
     fig_normalizado, ax_normalizado = plt.subplots()
     
-    # Vetor da tensão nominal secundária (V_secundaria)
+    # vetor da tensão nominal secundária (V_secundaria)
     ax_normalizado.quiver(0, 0, v_secundaria * np.cos(0), v_secundaria * np.sin(0), angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Nominal Secundária', linewidth=2)
 
-    # Vetor da tensão sem carga (V_no_load)
+    # vetor da tensão sem carga (V_no_load)
     ax_normalizado.quiver(0, 0, np.real(v_no_load), np.imag(v_no_load), angles='xy', scale_units='xy', scale=1, color='purple', label='Tensão Sem Carga', linewidth=2)
 
-    # Vetor da corrente (I_carga_complexa), deslocado pelo ângulo
-    angulo_ic_rad = np.radians(fase_i_carga_graus)  # converte para radianos
+    # vetor da corrente (I_carga_complexa), deslocado pelo ângulo
+    angulo_ic_rad = np.radians(fase_i_carga_graus)
 
     # escala para possibilitar vermos o vetor de corrente
     fator_escala = 15
     ax_normalizado.quiver(0, 0, fator_escala * i_carga * np.cos(angulo_ic_rad), fator_escala * i_carga * np.sin(angulo_ic_rad), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
 
-    # Configurações do gráfico
+    # cálculo dos ângulos dos vetores de tensão
+    angulo_v_secundaria_rad = np.angle(v_secundaria)
+    angulo_v_no_load_rad = np.angle(v_no_load)
+
+    # diferença de ângulo entre os vetores de tensão
+    angulo_diferenca_rad = angulo_v_no_load_rad - angulo_v_secundaria_rad
+    angulo_diferenca_graus = np.degrees(angulo_diferenca_rad)
+
+    st.write(f'**Ângulo entre os vetores de tensão:** {angulo_diferenca_graus:.2f}°')
+
+    # configurações do gráfico
     ax_normalizado.set_xlim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo X
     ax_normalizado.set_ylim(-2 * abs(v_secundaria), 2 * abs(v_secundaria))  # Aumenta o limite do eixo Y
     ax_normalizado.axhline(0, color='black', lw=0.5, ls='--')
@@ -114,5 +123,14 @@ if submit_button or st.session_state['transformer_challenge']:
     ax_normalizado.set_aspect('equal')
     ax_normalizado.set_title('Diagrama Fasorial Normalizado')
     ax_normalizado.legend()
+
+    # exibir angulo entre tensões
+    posicao_x = (np.real(v_no_load) + np.real(v_secundaria)) / 2  
+    posicao_y = -0.5 * abs(v_secundaria)
+    angulo_tensoes_texto = f'Ângulo entre tensões: {angulo_diferenca_graus:.2f}°'
+    angulo_corrente_texto = f'Ângulo da corrente: {fase_i_carga_graus:.2f}°'
+
+    ax_normalizado.text(posicao_x, posicao_y, angulo_tensoes_texto, fontsize=8, ha='center', color='black')
+    ax_normalizado.text(posicao_x, posicao_y*1.4, angulo_corrente_texto, fontsize=8, ha='center', color='black')
 
     st.pyplot(fig_normalizado)
