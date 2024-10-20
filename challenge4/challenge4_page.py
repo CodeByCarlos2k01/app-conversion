@@ -16,7 +16,7 @@ with st.form(key='input_form'):
     z_eq_imag = st.number_input('Reatância Equivalente (Ohms)', min_value=0.0, value=1.0, step=0.01)  # imag da impedância
     
     st.subheader('Insira os Parâmetros da Carga')
-    s_carga = st.number_input('Potência da Carga (VA)', min_value=1.0, value=180000.0, step=100.0)  # VA
+    p_carga = st.number_input('Potência da Carga (VA)', min_value=1.0, value=180000.0, step=100.0)  # VA
     fp_carga = st.number_input('Fator de Potência da Carga (0 a 1)', min_value=0.0, max_value=1.0, value=1.0, step=0.01)
     
     submit_button = st.form_submit_button(label='Gerar Resultado')
@@ -24,17 +24,17 @@ with st.form(key='input_form'):
 if submit_button or st.session_state['transformer_challenge']:
     st.session_state['transformer_challenge'] = True
     st.session_state['v_secundaria'] = v_secundaria
-    st.session_state['z_eq_real'], st.session_state['z_eq_imag'], st.session_state['s_carga'], st.session_state['fp_carga'] = z_eq_real, z_eq_imag, s_carga, fp_carga
+    st.session_state['z_eq_real'], st.session_state['z_eq_imag'], st.session_state['p_carga'], st.session_state['fp_carga'] = z_eq_real, z_eq_imag, p_carga, fp_carga
 
     st.divider()
     st.subheader('Cálculos Detalhados')
 
-    s_carga = st.session_state['s_carga']
+    p_carga = st.session_state['p_carga']
     v_secundaria = st.session_state['v_secundaria']
     z_eq = complex(st.session_state['z_eq_real'], st.session_state['z_eq_imag'])  # impedância como número complexo
 
     # corrente de carga (Ic)
-    i_carga = s_carga / v_secundaria
+    i_carga = p_carga / v_secundaria
     i_carga = i_carga * (st.session_state['fp_carga'] + 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
 
     queda_tensao = i_carga * z_eq  # (ΔV)
@@ -46,7 +46,7 @@ if submit_button or st.session_state['transformer_challenge']:
     regulacao = ((v_no_load - v_full_load) / v_full_load) * 100
 
     st.write('Vamos realizar os cálculos usando os valores inseridos:')
-    st.latex(f'I_{{\\text{{carga}}}} = \\frac{{{s_carga:.2f}}}{{{v_secundaria:.2f}}} = {i_carga:.2f} \\text{{ A}}')
+    st.latex(f'I_{{\\text{{carga}}}} = \\frac{{{p_carga:.2f}}}{{{v_secundaria:.2f}}} = {i_carga:.2f} \\text{{ A}}')
     st.latex(f'\\Delta V = I_{{\\text{{carga}}}} \\times Z_{{\\text{{eq}}}} = ({i_carga:.2f}) \\times ({z_eq.real} + j{z_eq.imag}) = {queda_tensao:.2f} \\text{{ V}}')
     st.write(f'Convertendo esse valor ΔV para absoluto...')
     st.latex(f'\\Delta V = {abs(queda_tensao)}')
