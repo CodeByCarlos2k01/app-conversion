@@ -160,15 +160,23 @@ with st.form('challenge1_form'):
         idx = awg[awg['secao'] >= Ss2].shape[0] - 1 
         secao22, n_awg22 = awg['secao'][idx], awg['numero'][idx]
         st.write(f'Usa-se **𝐟𝐢𝐨 𝐧.º {n_awg22} (𝐀𝐖𝐆)** cuja seção é **𝐒₂ = {secao22} 𝐦𝐦²**')
-        st.write('**N.B. Em ambos os enrolamentos a densidade de corrente resulta inferior ou igual à prevista, isto é:**')
-        
-        (Ip, secao1) = (round(Ip1 + Ip2, 2), round(secao11 + secao12, 2)) if cond1 else (Ip2, secao12)
-        (Is, secao2) = (round(Is1 + Is2, 2), round(secao21 + secao22, 2)) if cond2 else (Is2, secao22)
+        st.divider()
 
-        dp = round(Ip / secao1, 2)
-        st.latex(fr'd₁ = \frac{{I₁}}{{S₁}} = \frac{{{Ip}}}{{{secao1}}} = {{{dp}}} \ A/mm²')
-        ds = round(Is / secao2, 2)
-        st.latex(fr'd₂ = \frac{{I₂}}{{S₂}} = \frac{{{Is}}}{{{secao2}}} = {{{ds}}} \ A/mm²')
+        st.write('**N.B. Em ambos os enrolamentos a densidade de corrente resulta inferior ou igual à prevista, isto é:**')
+        if cond1:
+            dp1 = round(Ip1 / secao11, 2)
+            st.latex(fr'd₁ = \frac{{I₁}}{{S₁}} = \frac{{{Ip1}}}{{{secao11}}} = {{{dp1}}} \ A/mm²')
+        dp2 = round(Ip2 / secao12, 2)
+        st.latex(fr'd₁ = \frac{{I₁}}{{S₁}} = \frac{{{Ip2}}}{{{secao12}}} = {{{dp2}}} \ A/mm²')
+
+        if cond2:
+            ds1 = round(Is1 / secao21, 2)
+            st.latex(fr'd₂ = \frac{{I₂}}{{S₂}} = \frac{{{Is1}}}{{{secao21}}} = {{{ds1}}} \ A/mm²')
+        ds2 = round(Is2 / secao22, 2)
+        st.latex(fr'd₂ = \frac{{I₂}}{{S₂}} = \frac{{{Is2}}}{{{secao22}}} = {{{ds2}}} \ A/mm²')
+
+        dp = round((dp1 + dp2) / 2, 2) if cond1 else dp2
+        ds = round((ds1 + ds2) / 2, 2) if cond2 else ds2
         st.write('Para o cálculo da perda no cobre considera-se a densidade média de:')
         d_mean = round((dp + ds) / 2, 2)
         st.latex(fr'd = {{{d_mean}}} \ A/mm²')
@@ -200,9 +208,15 @@ with st.form('challenge1_form'):
         st.latex(fr'S_{{g}} = ({{{a}}}) \cdot ({{{b}}}) = {{{Sg}}} \ cm²; \quad S_{{m}} = \frac{{S_{{g}}}}{{1.1}} = \frac{{{Sg}}}{{1.1}} = {{{Sm}}} \ cm²')
         st.divider()
 
+        st.write(f'-𝐍𝐮́𝐦𝐞𝐫𝐨 𝐝𝐞 𝐥𝐚̂𝐦𝐢𝐧𝐚𝐬: Considerando que a espessura das lâminas padrão seja **𝟏.𝟓 𝐦𝐦**, temos que:')
+        b_mag = round(Sm / a, 2)
+        n_laminas = round(b_mag / 0.15, 2)
+        st.latex(fr'b_{{mag}} = \frac{{Sm}}{{a}} = \frac{{{Sm}}}{{{a}}} = {{{b_mag}}} \ cm')
+        st.latex(fr'N_{{laminas}} = \frac{{b_{{mag}}}}{{0.15}} = \frac{{{b_mag}}}{{0.15}} = {{{n_laminas}}} \ Laminas')
+        st.divider()
+
         Vp = Vp1 if cond1 else Vp2
         Vs = Vs1 if cond2 else Vs2
-
         st.write('-𝐄𝐬𝐩𝐢𝐫𝐚𝐬: Sendo a frequência de **𝟓𝟎 𝐇𝐳**, as espiras por volt resultam:')
         Esp_Volt = round(40 / Sm, 2)
         st.latex(fr'Esp/volt = \frac{{40}}{{S_{{m}}}} = \frac{{40}}{{{Sm}}} = {{{Esp_Volt}}}')
@@ -214,6 +228,8 @@ with st.form('challenge1_form'):
         st.latex(fr'N_{2} = ({{{Esp_Volt}}}) \cdot (V_{2}) \cdot (1.1) = ({{{Esp_Volt}}}) \cdot ({{{Vs}}}) \cdot (1.1) = {{{Ns}}} \ Espiras / circuito')
         st.divider()
 
+        secao1 = round(secao11 + secao12, 2) if cond1 else secao12
+        secao2 = round(secao21 + secao22, 2) if cond2 else secao22
         st.write('-𝐒𝐞𝐜̧𝐚̃𝐨 𝐝𝐨 𝐜𝐨𝐛𝐫𝐞 𝐞𝐧𝐫𝐨𝐥𝐚𝐝𝐨:')
         Scu = round(Np * secao1 + Ns * secao2, 2)
         st.latex(fr'S_{{cu}} = N_{1} S_{1} + N_{2} S_{2} = {{{Np}}} \cdot {{{secao1}}} + {{{Ns}}} \cdot {{{secao2}}} = {{{Scu}}} \ mm²')
@@ -279,6 +295,7 @@ with st.form('challenge1_form'):
             st.latex(fr'I_{2} = {Is1} \ A \ | \ S_{2} = {{{Ss1}}} \ | \ fio \ {n_awg21} \ ({secao21} \ mm²)')
         st.latex(fr'S_{{m}} = {{{Sm}}} \ cm² \ | \ S_{{g}} = {{{Sg}}} \ cm² \ | \ usa-se \ lâmina \ n.º \ {{{n_lamina}}}')
         st.latex(fr'Núcleo \ central \ [{{{a}}}] \ X \ [{{{b}}}]')
+        st.latex(fr'b_{{mag}} = {{{b_mag}}} \ cm; \quad N_{{laminas}} = {{{n_laminas}}} \ Laminas')
         st.latex(fr'Esp/volt = {{{Esp_Volt}}}')
         st.latex(fr'N_{1} = {{{Np}}} \ Espiras / circuito')
         st.latex(fr'N_{2} = {{{Ns}}} \ Espiras / circuito')
