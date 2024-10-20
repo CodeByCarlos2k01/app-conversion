@@ -72,19 +72,35 @@ if submit_button or st.session_state['transformer_challenge']:
         st.error("*Avaliação:* Inaceitável. A regulação é muito alta, indicando que o transformador não é adequado para a maioria das aplicações.")
 
     ## ------------------ diagrama fasorial ------------------ ##
-    fig, ax = plt.subplots()
-    max_magnitude = max(abs(i_carga), abs(queda_tensao), v_secundaria)
+    fig_real, ax_real = plt.subplots()
+    ax_real.quiver(0, 0, np.real(i_carga), np.imag(i_carga), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
+    ax_real.quiver(0, 0, np.real(queda_tensao), np.imag(queda_tensao), angles='xy', scale_units='xy', scale=1, color='b', label='Queda de Tensão', linewidth=2)
+    ax_real.quiver(0, 0, v_secundaria, 0, angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Secundária', linewidth=2)
 
-    ax.quiver(0, 0, np.real(i_carga) / max_magnitude, np.imag(i_carga) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
-    ax.quiver(0, 0, np.real(queda_tensao) / max_magnitude, np.imag(queda_tensao) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='b', label='Queda de Tensão', linewidth=2)
-    ax.quiver(0, 0, v_secundaria / max_magnitude, 0, angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Secundária', linewidth=2)
-
-    plt.xlim(-1.5, 1.5)  
-    plt.ylim(-1.5, 1.5)  
+    plt.xlim(-1.5 * abs(v_secundaria), 1.5 * abs(v_secundaria))
+    plt.ylim(-1.5 * abs(v_secundaria), 1.5 * abs(v_secundaria))
     plt.axhline(0, color='black', linewidth=0.8)
     plt.axvline(0, color='black', linewidth=0.8)
-    plt.title('Diagrama Fasorial do Transformador')
+    plt.title('Diagrama Fasorial do Transformador (Real)')
     plt.xlabel('Parte Real (V)')
     plt.ylabel('Parte Imaginária (V)')
     plt.legend()
-    st.pyplot(fig)
+    st.pyplot(fig_real)
+
+    ## ------------------ diagrama fasorial normalizado ------------------ ##
+    fig_normalized, ax_normalized = plt.subplots()
+    max_magnitude = max(abs(i_carga), abs(queda_tensao), v_secundaria)
+
+    ax_normalized.quiver(0, 0, np.real(i_carga) / max_magnitude, np.imag(i_carga) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
+    ax_normalized.quiver(0, 0, np.real(queda_tensao) / max_magnitude, np.imag(queda_tensao) / max_magnitude, angles='xy', scale_units='xy', scale=1, color='b', label='Queda de Tensão', linewidth=2)
+    ax_normalized.quiver(0, 0, v_secundaria / max_magnitude, 0, angles='xy', scale_units='xy', scale=1, color='g', label='Tensão Secundária', linewidth=2)
+
+    plt.xlim(-1.5, 1.5)
+    plt.ylim(-1.5, 1.5)
+    plt.axhline(0, color='black', linewidth=0.8)
+    plt.axvline(0, color='black', linewidth=0.8)
+    plt.title('Diagrama Fasorial do Transformador (Normalizado)')
+    plt.xlabel('Parte Real (Normalizado)')
+    plt.ylabel('Parte Imaginária (Normalizado)')
+    plt.legend()
+    st.pyplot(fig_normalized)
