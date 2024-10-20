@@ -19,7 +19,7 @@ with st.form(key='input_form'):
     p_carga = st.number_input('Potência da Carga (VA)', min_value=1.0, value=180000.0, step=100.0)  # VA
     fp_carga = st.number_input('Fator de Potência da Carga (0 a 1)', min_value=0.0, max_value=1.0, value=0.92, step=0.01)
     
-    fp_tipo = st.radio("Tipo de Fator de Potência:", ("Atrasado", "Adiantado"))  # Radio button para tipo de fator de potência
+    fp_tipo = st.radio("Tipo de Fator de Potência:", ("Atrasado", "Adiantado"))
     
     submit_button = st.form_submit_button(label='Gerar Resultado')
 
@@ -38,12 +38,13 @@ if submit_button or st.session_state['transformer_challenge']:
     # corrente de carga (Ic)
     i_carga = p_carga / v_secundaria
 
-    # Ajuste de corrente pela componente reativa
     if st.session_state['fp_tipo'] == 'Atrasado':
         # fator de potência atrasado (fase negativa)
+        fp_sign = '-'
         i_carga_complexa = i_carga * (st.session_state['fp_carga'] - 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
     else:
         # fator de potência adiantado (fase positiva)
+        fp_sign = '+'
         i_carga_complexa = i_carga * (st.session_state['fp_carga'] + 1j * np.sqrt(1 - st.session_state['fp_carga']**2))
 
     fase_i_carga_graus = np.degrees(np.angle(i_carga_complexa))
@@ -51,7 +52,7 @@ if submit_button or st.session_state['transformer_challenge']:
     queda_tensao = i_carga_complexa * z_eq  # (ΔV)
 
     # tensão secundária em carga
-    v_full_load = v_secundaria  # - abs(queda_tensao)
+    v_full_load = v_secundaria  # - queda_tensao (análise habitual de transformador de boa qualidade)
 
     # tensão sem carga considerando a queda de tensão
     v_no_load = v_secundaria + queda_tensao
@@ -61,28 +62,48 @@ if submit_button or st.session_state['transformer_challenge']:
 
     st.write('Vamos realizar os cálculos usando os valores inseridos:')
     st.latex(f'I_{{\\text{{carga}}}} = \\frac{{{p_carga:.2f}}}{{{v_secundaria:.2f}}} = {i_carga:.2f} \\text{{ A}}')
+    st.write(f'Calculando a carga complexa:')
+    st.latex(f'I_{{\\text{{cargaComplexa}}}} = I_{{\\text{{carga}}}} \\times (fp_{{\\text{{carga}}}} {{{fp_sign}}} j \\sqrt{{1 - (fp_{{\\text{{carga}}}})^2}})')
     st.latex(f'I_{{\\text{{cargaComplexa}}}} = {i_carga_complexa}')
+    st.write("   - *Esse resultado é um número complexo que contém tanto a parte real (ativa) quanto a parte imaginária (reativa) da corrente.*")
+
+    st.write('Agora, devemos encontrar o ângulo da corrente complexa, o fator de potência dado foi:')
+    st.latex(f'fp_{{\\text{{carga}}}} = {st.session_state["fp_carga"]}')
+    if st.session_state['fp_tipo'] == 'Atrasado':
+        st.write('Como o fator de potência é atrasado, o ângulo de fase é:')
+        st.latex(f'\\phi = -\\cos^{{-1}}(fp_{{\\text{{carga}}}}) = -\\cos^{{-1}}({st.session_state["fp_carga"]}) = {fase_i_carga_graus:.2f}^\\circ')
+    else:
+        st.write('Como o fator de potência é adiantado, o ângulo de fase é:')
+        st.latex(f'\\phi = \\cos^{{-1}}(fp_{{\\text{{carga}}}}) = \\cos^{{-1}}({st.session_state["fp_carga"]}) = {fase_i_carga_graus:.2f}^\\circ')
+
+    st.write(f'Temos:')
+    st.latex(f'\\phi = {fase_i_carga_graus:.2f}^\\circ')
+
+    st.write(f'Agora, continuamos calculando o valor de queda de tensão:')
     st.latex(f'\\Delta V = I_{{\\text{{carga}}}} \\times Z_{{\\text{{eq}}}} = ({i_carga_complexa:.2f}) \\times ({z_eq.real} + j{z_eq.imag}) = {queda_tensao:.2f} \\text{{ V}}')
-    st.write(f'Convertendo esse valor ΔV para absoluto...')
+    st.write('Convertendo esse valor ΔV para absoluto...')
     st.latex(f'\\Delta V = {abs(queda_tensao)}')
     st.latex(f'\\Delta V =~ {abs(queda_tensao):.2f}')
-    st.latex(f'V_{{\\text{{comCarga}}}} = V_{{\\text{{secundário}}}} - |\\Delta V| = {v_secundaria:.2f} - {abs(queda_tensao):.2f} = {v_full_load:.2f} \\text{{ V}}')
+    st.write('Cenário habitual de análise:')
+
+    # Exibição das tensões
+    st.latex(f'V_{{\\text{{comCarga}}}} = V_{{\\text{{secundário}}}}')
     st.latex(f'V_{{\\text{{semCarga}}}} = V_{{\\text{{secundário}}}} + \\Delta V = {v_secundaria:.2f} + {queda_tensao:.2f} = {v_no_load:.2f} \\text{{ V}}')
-    st.latex(f'\\text{{Regulação}} = \\frac{{|V_{{sem carga}}| - |V_{{comCarga}}|}}{{|V_{{comCarga}}|}} \\times 100\\% = \\frac{{{abs(v_no_load):.2f} - {abs(v_full_load):.2f}}}{{{abs(v_full_load):.2f}}} \\times 100\\% = {regulacao:.2f}\\%')
+    st.latex(f'\\text{{Regulação}} = \\frac{{|V_{{semCarga}}| - |V_{{comCarga}}|}}{{|V_{{comCarga}}|}} \\times 100\\% = \\frac{{{abs(v_no_load):.2f} - {abs(v_full_load):.2f}}}{{{abs(v_full_load):.2f}}} \\times 100\\% = {regulacao:.2f}\\%')
 
     st.subheader('Resultado da Regulação do Transformador')
     st.write(f'**Regulação do Transformador:** {regulacao:.2f}%')
-    if regulacao < 0:
-        st.warning("*Atenção:* A regulação do transformador é negativa! Isso indica que a tensão sob carga é maior do que a tensão nominal sem carga. Essa condição pode causar problemas em equipamentos conectados e não é desejável para a operação segura do sistema.")
-    elif regulacao < 1:
+
+
+    if -1 < regulacao < 1:
         st.success("*Avaliação:* Excelente. O transformador mantém a tensão praticamente constante sob carga.")
-    elif 1 <= regulacao < 3:
+    elif 1 <= regulacao < 3 or -3 <= regulacao < -1:
         st.success("*Avaliação:* Muito Bom. A variação de tensão é quase imperceptível para a maioria das aplicações.")
-    elif 3 <= regulacao < 5:
+    elif 3 <= regulacao < 5 or -5 <= regulacao < -3:
         st.warning("*Avaliação:* Bom. A variação de tensão é aceitável para a maioria das aplicações comerciais e industriais.")
-    elif 5 <= regulacao < 10:
+    elif 5 <= regulacao < 10 or -10 <= regulacao < -5:
         st.warning("*Avaliação:* Razoável. A variação de tensão é mais perceptível, mas ainda tolerável em situações não críticas.")
-    elif 10 <= regulacao < 15:
+    elif 10 <= regulacao < 15 or -15 <= regulacao < -10:
         st.error("*Avaliação:* Ruim. A variação de tensão é alta e pode afetar equipamentos sensíveis.")
     else:
         st.error("*Avaliação:* Inaceitável. A regulação é muito alta, indicando que o transformador não é adequado para a maioria das aplicações.")
@@ -132,3 +153,5 @@ if submit_button or st.session_state['transformer_challenge']:
     ax_normalizado.text(posicao_x, posicao_y*1.4, angulo_corrente_texto, fontsize=8, ha='center', color='black')
 
     st.pyplot(fig_normalizado)
+
+    st.write(f'**O valor da corrente no gráfico foi multiplicado por 15 para melhor visualização do seu vetor.*')
