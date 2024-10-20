@@ -8,18 +8,32 @@ if 'transformer_challenge' not in st.session_state:
 st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟒]')
 st.title('Cálculo da regulação do transformador')
 st.markdown('A regulação do transformador é uma medida que indica a variação percentual na tensão secundária de um transformador quando ele passa da condição de vazio (sem carga) para a condição de carga nominal.')
+st.divider()
 
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚')
+    st.markdown('• Parâmetros do transformador')
+    st.markdown('• Dados da carga')
+with col2:
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚𝐢́𝐝𝐚')
+    st.markdown('• Regulação do Transformador')
+    st.markdown('• Diagrama fasorial')
+
+st.divider()
+st.title('Dados de Entrada')
 with st.form(key='input_form'):
     st.subheader('Insira os Parâmetros do Transformador')
-    v_secundaria = st.number_input('Tensão Nominal Secundária (V)', min_value=0.1, value=2400.0, step=10.0)  # V
-    z_eq_real = st.number_input('Resistência Equivalente (Ohms)', min_value=0.0, value=0.28, step=0.01)  # real da impedância
-    z_eq_imag = st.number_input('Reatância Equivalente (Ohms)', min_value=0.0, value=1.0, step=0.01)  # imag da impedância
+    col1, col2, col3 = st.columns(3)
+    v_secundaria = col1.number_input('Tensão Nominal Secundária (𝐕)', min_value=0.1, value=2400.0, step=10.0)  # V
+    z_eq_real    = col2.number_input('Resistência Equivalente (𝐎𝐡𝐦𝐬)', min_value=0.0, value=0.28, step=0.01)  # real da impedância
+    z_eq_imag    = col3.number_input('Reatância Equivalente (𝐎𝐡𝐦𝐬)', min_value=0.0, value=1.0, step=0.01)  # imag da impedância
     
     st.subheader('Insira os Parâmetros da Carga')
-    p_carga = st.number_input('Potência da Carga (VA)', min_value=1.0, value=180000.0, step=100.0)  # VA
-    fp_carga = st.number_input('Fator de Potência da Carga (0 a 1)', min_value=0.0, max_value=1.0, value=0.92, step=0.01)
-    
-    fp_tipo = st.radio("Tipo de Fator de Potência:", ("Atrasado", "Adiantado"))
+    col1, col2, col3 = st.columns(3)
+    p_carga  = col1.number_input('Potência da Carga (𝐕𝐀)', min_value=1.0, value=180000.0, step=100.0)  # VA
+    fp_carga = col2.number_input('Fator de Potência da Carga [𝟎 𝐚 𝟏]', min_value=0.0, max_value=1.0, value=0.92, step=0.01)
+    fp_tipo  = col3.radio("Tipo de Fator de Potência:", ("Atrasado", "Adiantado"))
     
     submit_button = st.form_submit_button(label='Gerar Resultado')
 
@@ -158,6 +172,6 @@ if submit_button or st.session_state['transformer_challenge']:
 
         st.pyplot(fig_normalizado)
 
-        st.write(f'**O valor da corrente no gráfico foi multiplicado por {fator_escala} para melhor visualização do seu vetor.*')
+        st.write(f'**:red[OBS:] :green[O valor da corrente no gráfico foi multiplicado por {fator_escala} para melhor visualização do seu vetor.]**')
     except Exception as e:
         st.error('Ocorreu um erro ao gerar o gráfico, possivelmente devido a parâmetros inconsistentes.')

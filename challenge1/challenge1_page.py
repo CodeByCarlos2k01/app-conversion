@@ -91,7 +91,7 @@ with st.form('challenge1_form'):
         tipo_transformador = 1 if (cond1, cond2) == (False, False) else 2 if (cond1 or cond2) and not (cond1 and cond2) else 3
 
         st.write('\n')
-        st.subheader('Cálculo do Transformador Monofásico (Solução)')
+        st.subheader('Cálculo do Transformador Monofásico (:green[Solução])')
         st.divider()
         
         col1, col2 = st.columns(2)
