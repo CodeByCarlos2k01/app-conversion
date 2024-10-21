@@ -23,7 +23,7 @@ st.divider()
 st.subheader(':blue[𝟏.] 𝐃𝐢𝐦𝐞𝐧𝐬𝐢𝐨𝐧𝐚𝐦𝐞𝐧𝐭𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('O dimensionamento de um transformador monofásico serve para garantir que o equipamento seja capaz de atender às necessidades específicas de um sistema elétrico, operando com segurança e eficiência. Esse processo envolve calcular as capacidades elétricas adequadas.')
 st.subheader(':blue[𝟐.] 𝐂𝐮𝐫𝐯𝐚 𝐝𝐚 𝐂𝐨𝐫𝐫𝐞𝐧𝐭𝐞 𝐝𝐞 𝐌𝐚𝐠𝐧𝐞𝐭𝐢𝐳𝐚𝐜̧𝐚̃𝐨')
-st.markdown('Coloca o texto da seção 2 aqui')
+st.markdown('A curva de corrente de magnetização ao longo do tempo é crucial para: Identificar picos de corrente, ajustar para evitar sobrecargas, calcular perdas no núcleo, estabilizar o sistema, prever comportamento em falhas e configurar proteções adequadas')
 st.subheader(':blue[𝟑.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐞 𝐏𝐚𝐫𝐚̂𝐦𝐞𝐭𝐫𝐨𝐬 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios 
 de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
