@@ -55,7 +55,7 @@ with col2:
     st.markdown('• Dimensões do transformador: Núcleo e dimensões finais, peso.')
 
 st.divider()
-st.info('𝐎 𝐚𝐥𝐠𝐨𝐫𝐢𝐭𝐦𝐨 𝐢𝐫𝐚́ 𝐜𝐨𝐧𝐬𝐢𝐝𝐞𝐫𝐚𝐫 𝐚 𝐅𝐫𝐞𝐪𝐮𝐞̂𝐧𝐜𝐢𝐚 𝐩𝐚𝐝𝐫𝐚̃𝐨 𝐝𝐞 𝟓𝟎 𝐇𝐳 𝐞 𝐚 𝐏𝐨𝐭𝐞̂𝐧𝐜𝐢𝐚 𝐥𝐢𝐦𝐢𝐭𝐞 𝐝𝐞 𝟖𝟎𝟎 𝐕𝐀.')
+st.warning(':blue[𝐎 𝐚𝐥𝐠𝐨𝐫𝐢𝐭𝐦𝐨 𝐢𝐫𝐚́ 𝐜𝐨𝐧𝐬𝐢𝐝𝐞𝐫𝐚𝐫 𝐚 𝐅𝐫𝐞𝐪𝐮𝐞̂𝐧𝐜𝐢𝐚 𝐩𝐚𝐝𝐫𝐚̃𝐨 𝐝𝐞 𝟓𝟎 𝐇𝐳 𝐞 𝐚 𝐏𝐨𝐭𝐞̂𝐧𝐜𝐢𝐚 𝐥𝐢𝐦𝐢𝐭𝐞 𝐝𝐞 𝟖𝟎𝟎 𝐕𝐀.]')
 
 st.title('Dados de entrada')
 
@@ -76,7 +76,11 @@ with st.form('challenge1_form'):
     Ws = st.number_input("Informe a Potência da carga em Volt-Ampere", min_value = 0.0, max_value = 800.0)
     Ws = st.session_state['challenge1_Ws'] if Ws == 0 else Ws
 
-    if (st.form_submit_button('Gerar Resultado') or st.session_state['challenge1']):
+    challenge1_button = st.form_submit_button('Gerar Resultado')
+
+if (challenge1_button or st.session_state['challenge1']):
+    st.title('Resultado')
+    with st.expander('Passo a Passo da Resolução', expanded=True):
         try:
             st.session_state['challenge1'] = True
             st.session_state['challenge1_circuito_p'], st.session_state['challenge1_Vp2'] = circuito_p, Vp2
@@ -308,4 +312,4 @@ with st.form('challenge1_form'):
             st.latex(fr'W_{{cu}} = {{{Wcu}}} \ watts')
             st.latex(fr'Rendimento = {{{u}}}')
         except:
-            st.info(':red[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮𝐜̧𝐚̃𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯𝐚́𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
+            st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮𝐜̧𝐚̃𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯𝐚́𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
