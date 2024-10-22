@@ -8,8 +8,6 @@ if 'Vp' not in st.session_state:
     st.session_state.Vp = 120.0
 if 'freq' not in st.session_state:
     st.session_state.freq = 50.0
-if 'P' not in st.session_state:
-    st.session_state.P = 300.0
 if 'Np' not in st.session_state:
     st.session_state.Np = 850
 
@@ -19,7 +17,6 @@ st.title("Simulação da Corrente de Magnetização de um Transformador")
 # Inputs interativos no Streamlit com valores padrão usando session_state
 st.session_state.Vp = st.number_input('Tensão Primária (Vp) em Volts', value=st.session_state.Vp)
 st.session_state.freq = st.number_input('Frequência (Hz)', value=st.session_state.freq)
-st.session_state.P = st.number_input('Potência Aparente (VA)', value=st.session_state.P)
 st.session_state.Np = st.number_input('Número de Espiras no Primário (Np)', value=st.session_state.Np)
 
 # Nome do caminho do arquivo
