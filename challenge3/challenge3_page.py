@@ -13,12 +13,14 @@ def converter(valor, n, lado_entrada, lado_saida):
 # Função para calcular parâmetros de circuito aberto
 def calcular_parametros_circuito_aberto(Vca, Ica, Pca):
     Rc = Vca**2 / Pca  # Resistência do núcleo
-    Zphi = Vca / Ica  # Impedância do ramo de magnetização
-    if Zphi**2 - Rc**2 >= 0:
-        Xm = math.sqrt(Zphi**2 - Rc**2)  # Reatância de magnetização
+    Zphi = Vca / Ica  # Impedância do ramo de magnetização    
+    # Cálculo da reatância de magnetização 
+    if (1/Zphi)**2 - (1/Rc)**2 > 0:
+        Xm = 1 / math.sqrt((1/Zphi)**2 - (1/Rc)**2)
     else:
         Xm = 0  # Evita erro de domínio
-    return Rc, Zphi, Xm  # Agora estamos retornando os 3 valores: Rc, Zphi, Xm
+    
+    return Rc, Zphi, Xm
 
 # Função para calcular parâmetros de curto-circuito
 def calcular_parametros_curto_circuito(Vcc, Icc, Pcc):
