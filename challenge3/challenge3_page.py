@@ -30,15 +30,12 @@ def calcular_parametros_curto_circuito(Vcc, Icc, Pcc):
     return Req, Zcc, Xeq  # Retorna 3 valores
 
 st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟑]')
-st.title('Determinação dos parâmetros do transformador monofásico')
 
-st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios 
-de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
-calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
+st.title('Determinação dos parâmetros do transformador monofásico')
+st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
 st.divider()
 
 col1, col2 = st.columns(2)
-
 with col1:
     st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚')
     st.markdown('• Ensaio de Circuito Aberto: Vca/ Ica/Pca')
@@ -48,22 +45,21 @@ with col2:
     st.markdown('• Parâmetros do transformador')
     st.markdown('• Característica fasorial do transformador')
     st.markdown('• Imagem ilustrando os parâmetros do transformador')
-
 st.divider()
 
 # Interface do Streamlit
 st.title("Dados de Entrada")
-col1, col2 = st.columns(2)
+with st.expander('', expanded=True):
+    col1, col2 = st.columns(2)
 
-# Relação de transformação
-n = col1.number_input("Relação de Transformação [𝐧 = 𝐕_𝐚𝐥𝐭𝐚 / 𝐕_𝐛𝐚𝐢𝐱𝐚]", value=20.0)
+    # Relação de transformação
+    n = col1.number_input("Relação de Transformação [𝐧 = 𝐕_𝐚𝐥𝐭𝐚 / 𝐕_𝐛𝐚𝐢𝐱𝐚]")
 
-# Escolha da saída (alta ou baixa tensão)
-lado_saida = col2.radio("Deseja que os resultados sejam referidos ao lado de:", ("Alta Tensão", "Baixa Tensão"))
+    # Escolha da saída (alta ou baixa tensão)
+    lado_saida = col2.radio("Deseja que os resultados sejam referidos ao lado de:", ("Alta Tensão", "Baixa Tensão"))
 
-# Escolha do tipo de ensaio
-tipo_ensaio = st.selectbox("Escolha o tipo de ensaio", ["Circuito Aberto", "Curto-Circuito"])
-st.divider()
+    # Escolha do tipo de ensaio
+    tipo_ensaio = st.selectbox("Escolha o tipo de ensaio", ["Circuito Aberto", "Curto-Circuito"])
 
 # Exibição dos inputs com base na escolha
 if tipo_ensaio == "Circuito Aberto":
@@ -85,26 +81,29 @@ if tipo_ensaio == "Circuito Aberto":
     Vca_conv = converter(Vca, n, lado_Vca, lado_saida)
     Ica_conv = converter(Ica, n, lado_Ica, lado_saida)
     Pca_conv = converter(Pca, n, lado_Pca, lado_saida)
+    st.write('')
 
     # Cálculo de Circuito Aberto
     if st.button("Calcular Circuito Aberto"):
-        Rc, Zphi, Xm = calcular_parametros_circuito_aberto(Vca_conv, Ica_conv, Pca_conv)
-        
-        # Explicação detalhada dos cálculos
-        st.markdown("### Explicação dos Cálculos Realizados: Circuito Aberto")
-        
-        # Explicação passo a passo
-        st.markdown("#### 1. Cálculo da Resistência do Núcleo ($R_c$):")
-        st.latex(r"R_c = \frac{V_{ca}^2}{P_{ca}}")
-        st.latex(f"R_c = \\frac{{{Vca_conv}^2}}{{{Pca_conv}}} = {Rc:.2f} \, \text{{ohms}}")
-        
-        st.markdown("#### 2. Cálculo da Impedância do Ramo de Magnetização ($Z_\\varphi$):")
-        st.latex(r"Z_\varphi = \frac{V_{ca}}{I_{ca}}")
-        st.latex(f"Z_\\varphi = \\frac{{{Vca_conv}}}{{{Ica_conv}}} = {Zphi:.2f} \, \text{{ohms}}")
-        
-        st.markdown("#### 3. Cálculo da Reatância de Magnetização ($X_m$):")
-        st.latex(r"X_m = \sqrt{Z_\varphi^2 - R_c^2}")
-        st.latex(f"X_m = \\sqrt{{{Zphi:.2f}^2 - {Rc:.2f}^2}} = {Xm:.2f} \, \text{{ohms}}")
+        st.title('Resultado')
+        with st.expander('Passo a Passo da Resolução', expanded=True):
+            Rc, Zphi, Xm = calcular_parametros_circuito_aberto(Vca_conv, Ica_conv, Pca_conv)
+            
+            # Explicação detalhada dos cálculos
+            st.markdown("### Explicação dos Cálculos Realizados: Circuito Aberto")
+            
+            # Explicação passo a passo
+            st.markdown("#### 1. Cálculo da Resistência do Núcleo ($R_c$):")
+            st.latex(r"R_c = \frac{V_{ca}^2}{P_{ca}}")
+            st.latex(f"R_c = \\frac{{{Vca_conv}^2}}{{{Pca_conv}}} = {Rc:.2f} \, \text{{ohms}}")
+            
+            st.markdown("#### 2. Cálculo da Impedância do Ramo de Magnetização ($Z_\\varphi$):")
+            st.latex(r"Z_\varphi = \frac{V_{ca}}{I_{ca}}")
+            st.latex(f"Z_\\varphi = \\frac{{{Vca_conv}}}{{{Ica_conv}}} = {Zphi:.2f} \, \text{{ohms}}")
+            
+            st.markdown("#### 3. Cálculo da Reatância de Magnetização ($X_m$):")
+            st.latex(r"X_m = \sqrt{Z_\varphi^2 - R_c^2}")
+            st.latex(f"X_m = \\sqrt{{{Zphi:.2f}^2 - {Rc:.2f}^2}} = {Xm:.2f} \, \text{{ohms}}")
 
 elif tipo_ensaio == "Curto-Circuito":
 
@@ -128,19 +127,21 @@ elif tipo_ensaio == "Curto-Circuito":
 
     # Cálculo de Curto-Circuito
     if st.button("Calcular Curto-Circuito"):
-        Req, Zcc, Xeq = calcular_parametros_curto_circuito(Vcc_conv, Icc_conv, Pcc_conv)
-        
-        # Explicação detalhada dos cálculos
-        st.markdown("### Explicação dos Cálculos Realizados: Curto-Circuito")
-        
-        st.markdown("#### 1. Cálculo da Impedância de Curto-Circuito ($Z_{cc}$):")
-        st.latex(r"Z_{cc} = \frac{V_{cc}}{I_{cc}}")
-        st.latex(f"Z_{{cc}} = \\frac{{{Vcc_conv}}}{{{Icc_conv}}} = {Zcc:.2f} \, \text{{ohms}}")
+        st.title('Resultado')
+        with st.expander('Passo a Passo da Resolução', expanded=True):
+            Req, Zcc, Xeq = calcular_parametros_curto_circuito(Vcc_conv, Icc_conv, Pcc_conv)
+            
+            # Explicação detalhada dos cálculos
+            st.markdown("### Explicação dos Cálculos Realizados: Curto-Circuito")
+            
+            st.markdown("#### 1. Cálculo da Impedância de Curto-Circuito ($Z_{cc}$):")
+            st.latex(r"Z_{cc} = \frac{V_{cc}}{I_{cc}}")
+            st.latex(f"Z_{{cc}} = \\frac{{{Vcc_conv}}}{{{Icc_conv}}} = {Zcc:.2f} \, \text{{ohms}}")
 
-        st.markdown("#### 2. Cálculo da Resistência Equivalente ($R_{eq}$):")
-        st.latex(r"R_{eq} = \frac{P_{cc}}{I_{cc}^2}")
-        st.latex(f"R_{{eq}} = \\frac{{{Pcc_conv}}}{{{Icc_conv}^2}} = {Req:.2f} \, \text{{ohms}}")
-        
-        st.markdown("#### 3. Cálculo da Reatância Equivalente ($X_{eq}$):")
-        st.latex(r"X_{eq} = \sqrt{Z_{cc}^2 - R_{eq}^2}")
-        st.latex(f"X_{{eq}} = \\sqrt{{{Zcc:.2f}^2 - {Req:.2f}^2}} = {Xeq:.2f} \, \text{{ohms}}")
+            st.markdown("#### 2. Cálculo da Resistência Equivalente ($R_{eq}$):")
+            st.latex(r"R_{eq} = \frac{P_{cc}}{I_{cc}^2}")
+            st.latex(f"R_{{eq}} = \\frac{{{Pcc_conv}}}{{{Icc_conv}^2}} = {Req:.2f} \, \text{{ohms}}")
+            
+            st.markdown("#### 3. Cálculo da Reatância Equivalente ($X_{eq}$):")
+            st.latex(r"X_{eq} = \sqrt{Z_{cc}^2 - R_{eq}^2}")
+            st.latex(f"X_{{eq}} = \\sqrt{{{Zcc:.2f}^2 - {Req:.2f}^2}} = {Xeq:.2f} \, \text{{ohms}}")
