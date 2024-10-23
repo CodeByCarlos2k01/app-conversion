@@ -5,8 +5,8 @@ import math
 if 'challenge1' not in st.session_state:
     st.session_state['challenge1'] = False
     st.session_state['challenge1_circuito_p'] = 1
-    st.session_state['challenge1_Vp2'] = 0.0
     st.session_state['challenge1_circuito_s'] = 1
+    st.session_state['challenge1_Vp2'] = 0.0
     st.session_state['challenge1_Vs2'] = 0.0
     st.session_state['challenge1_Ws'] = 0.0
 
