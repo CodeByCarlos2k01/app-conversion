@@ -11,7 +11,7 @@ if 'challenge4' not in st.session_state:
     st.session_state['challenge4_fp_carga']     = 0.0
     st.session_state['challenge4_fp_tipo']      = "Atrasado"
 
-st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟒]')
+st.title(':blue[𝐒𝐞çã𝐨 𝟒]')
 st.title('Cálculo da regulação do transformador')
 st.markdown('A regulação do transformador é uma medida que indica a variação percentual na tensão secundária de um transformador quando ele passa da condição de vazio (sem carga) para a condição de carga nominal.')
 st.divider()
@@ -22,7 +22,7 @@ with col1:
     st.markdown('• Parâmetros do transformador')
     st.markdown('• Dados da carga')
 with col2:
-    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚𝐢́𝐝𝐚')
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚í𝐝𝐚')
     st.markdown('• Regulação do Transformador')
     st.markdown('• Diagrama fasorial')
 

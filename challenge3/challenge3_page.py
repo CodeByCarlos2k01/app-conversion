@@ -49,7 +49,7 @@ if 'challenge3' not in st.session_state:
     st.session_state['challenge3_lado_Icc'] = "Alta Tensão"
     st.session_state['challenge3_lado_Pcc'] = "Alta Tensão"
 
-st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟑]')
+st.title(':blue[𝐒𝐞çã𝐨 𝟑]')
 
 st.title('Determinação dos parâmetros do transformador monofásico')
 st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
@@ -61,7 +61,7 @@ with col1:
     st.markdown('• Ensaio de Circuito Aberto: Vca/ Ica/Pca')
     st.markdown('• Ensaio de Curto-circuito: Vcc/Icc/Pcc')
 with col2:
-    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚𝐢́𝐝𝐚')
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚í𝐝𝐚')
     st.markdown('• Parâmetros do transformador')
     st.markdown('• Característica fasorial do transformador')
     st.markdown('• Imagem ilustrando os parâmetros do transformador')
@@ -73,7 +73,7 @@ with st.expander('', expanded=True):
     col1, col2 = st.columns(2)
 
     # Relação de transformação
-    n = col1.number_input("Relação de Transformação [𝐧 = 𝐕_𝐚𝐥𝐭𝐚 / 𝐕_𝐛𝐚𝐢𝐱𝐚]")
+    n = col1.number_input("Relação de Transformação [𝐧 = 𝐕_𝐚𝐥𝐭𝐚 / 𝐕_𝐛𝐚𝐢𝐱𝐚]", step=10.0)
     n = st.session_state['challenge3_n'] if n == 0 else n
 
     # Escolha da saída (alta ou baixa tensão)
@@ -90,15 +90,15 @@ if tipo_ensaio == "Circuito Aberto":
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            Vca = st.number_input("Tensão Circuito Aberto (𝐕𝐜𝐚)")
+            Vca = st.number_input("Tensão Circuito Aberto (𝐕𝐜𝐚)", step=10.0)
             lado_Vca = st.radio("A tensão (𝐕𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vca")
             (Vca, lado_Vca) = (st.session_state['challenge3_Vca'], st.session_state['challenge3_lado_Vca']) if Vca == 0 else (Vca, lado_Vca)
         with col2:
-            Ica = st.number_input("Corrente Circuito Aberto (𝐈𝐜𝐚)")
+            Ica = st.number_input("Corrente Circuito Aberto (𝐈𝐜𝐚)", step=10.0)
             lado_Ica = st.radio("A corrente (𝐈𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Ica")
             (Ica, lado_Ica) = (st.session_state['challenge3_Ica'], st.session_state['challenge3_lado_Ica']) if Ica == 0 else (Ica, lado_Ica)
         with col3:
-            Pca = st.number_input("Potência Circuito Aberto (𝐏𝐜𝐚)")
+            Pca = st.number_input("Potência Circuito Aberto (𝐏𝐜𝐚)", step=10.0)
             lado_Pca = st.radio("A potência (𝐏𝐜𝐚) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pca")
             (Pca, lado_Pca) = (st.session_state['challenge3_Pca'], st.session_state['challenge3_lado_Pca']) if Pca == 0 else (Pca, lado_Pca)
 
@@ -144,7 +144,7 @@ if tipo_ensaio == "Circuito Aberto":
                 st.latex(r"X_m = \sqrt{Z_\varphi^2 - R_c^2}")
                 st.latex(f"X_m = \\sqrt{{{Zphi:.2f}^2 - {Rc:.2f}^2}} = {Xm:.2f} \, \text{{ohms}}")
             except:
-                st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮𝐜̧𝐚̃𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯𝐚́𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
+                st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮çã𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯á𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
 
 elif tipo_ensaio == "Curto-Circuito":
     with st.form('challenge3_form'):
@@ -152,15 +152,15 @@ elif tipo_ensaio == "Curto-Circuito":
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            Vcc = st.number_input("Tensão Curto-Circuito (𝐕𝐜𝐜)")
+            Vcc = st.number_input("Tensão Curto-Circuito (𝐕𝐜𝐜)", step=10.0)
             lado_Vcc = st.radio("A tensão (𝐕𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Vcc")
             (Vcc, lado_Vcc) = (st.session_state['challenge3_Vcc'], st.session_state['challenge3_lado_Vcc']) if Vcc == 0 else (Vcc, lado_Vcc)
         with col2:
-            Icc = st.number_input("Corrente Curto-Circuito (𝐈𝐜𝐜)")
+            Icc = st.number_input("Corrente Curto-Circuito (𝐈𝐜𝐜)", step=10.0)
             lado_Icc = st.radio("A corrente (𝐈𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Icc")
             (Icc, lado_Icc) = (st.session_state['challenge3_Icc'], st.session_state['challenge3_lado_Icc']) if Icc == 0 else (Icc, lado_Icc)
         with col3:
-            Pcc = st.number_input("Potência Curto-Circuito (𝐏𝐜𝐜)")
+            Pcc = st.number_input("Potência Curto-Circuito (𝐏𝐜𝐜)", step=10.0)
             lado_Pcc = st.radio("A potência (𝐏𝐜𝐜) está em:", ("Alta Tensão", "Baixa Tensão"), key="Pcc")
             (Pcc, lado_Pcc) = (st.session_state['challenge3_Pcc'], st.session_state['challenge3_lado_Pcc']) if Pcc == 0 else (Pcc, lado_Pcc)
         
@@ -205,4 +205,4 @@ elif tipo_ensaio == "Curto-Circuito":
                 st.latex(r"X_{eq} = \sqrt{Z_{cc}^2 - R_{eq}^2}")
                 st.latex(f"X_{{eq}} = \\sqrt{{{Zcc:.2f}^2 - {Req:.2f}^2}} = {Xeq:.2f} \, \text{{ohms}}")
             except:
-                st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮𝐜̧𝐚̃𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯𝐚́𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
+                st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮çã𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯á𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')

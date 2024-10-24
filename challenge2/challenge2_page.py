@@ -9,7 +9,7 @@ if 'challenge2' not in st.session_state:
     st.session_state['challenge2_Np'] = 0.0
     st.session_state['challenge2_freq'] = 0.0
 
-st.title(':blue[𝐒𝐞𝐜̧𝐚̃𝐨 𝟐]')
+st.title(':blue[𝐒𝐞çã𝐨 𝟐]')
 
 # Título da aplicação
 st.title("Corrente de Magnetização de um Transformador")
@@ -21,7 +21,7 @@ with col1:
     st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚')
     st.markdown('• Característica do material (Curva BxH)')
 with col2:
-    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚𝐢́𝐝𝐚')
+    st.subheader('𝐃𝐚𝐝𝐨𝐬 𝐝𝐞 𝐬𝐚í𝐝𝐚')
     st.markdown('• Curva da corrente de magnetização x tempo')
 st.divider()
 
@@ -29,15 +29,15 @@ st.title('Dados de Entrada')
 with st.form('challenge2_form'):
     # Inputs interativos no Streamlit com valores padrão usando session_state
     st.subheader('Tensão primária')
-    Vp = st.number_input('Informe a Tensão Primária (Vp) em Volts', min_value=0.0)
+    Vp = st.number_input('Informe a Tensão Primária (Vp) em Volts', min_value=0.0, step=10.0)
     Vp = st.session_state['challenge2_Vp'] if Vp == 0 else Vp
 
     st.subheader('Frequência')
-    freq = st.number_input('Informe a Frequência (Hz)', min_value=0.0)
+    freq = st.number_input('Informe a Frequência (Hz)', min_value=0.0, step=10.0)
     freq = st.session_state['challenge2_freq'] if freq == 0 else freq
     
     st.subheader('Número de espiras')
-    Np = st.number_input('Informe o Número de Espiras no Primário (Np)', min_value=0.0)
+    Np = st.number_input('Informe o Número de Espiras no Primário (Np)', min_value=0.0, step=10.0)
     Np = st.session_state['challenge2_Np'] if Np == 0 else Np
 
     challenge2_button = st.form_submit_button('Gerar Resultado')
@@ -153,4 +153,4 @@ if (challenge2_button or st.session_state['challenge2']):
             Este cálculo do valor eficaz (RMS) é importante para entender o comportamento real da corrente ao longo do tempo e suas implicações no desempenho do transformador.
             """)
         except:
-            st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮𝐜̧𝐚̃𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯𝐚́𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')
+            st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮çã𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯á𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')

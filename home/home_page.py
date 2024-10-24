@@ -11,9 +11,9 @@ st.write('')
 
 col1, col2 = st.columns(2)
 with col1:
-    st.image('home/models/transformador_1.png', caption='𝐼𝑙𝑢𝑠𝑡𝑟𝑎𝑐̧𝑎̃𝑜 1')
+    st.image('home/models/transformador_1.png', caption='𝐼𝑙𝑢𝑠𝑡𝑟𝑎çã𝑜 1')
 with col2:
-    st.image('home/models/transformador_2.png', caption='𝐼𝑙𝑢𝑠𝑡𝑟𝑎𝑐̧𝑎̃𝑜 2')
+    st.image('home/models/transformador_2.png', caption='𝐼𝑙𝑢𝑠𝑡𝑟𝑎çã𝑜 2')
 st.divider()
 
 st.title('Sobre a ferramenta')
@@ -22,11 +22,14 @@ st.divider()
 
 st.subheader(':blue[𝟏.] 𝐃𝐢𝐦𝐞𝐧𝐬𝐢𝐨𝐧𝐚𝐦𝐞𝐧𝐭𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('O dimensionamento de um transformador monofásico serve para garantir que o equipamento seja capaz de atender às necessidades específicas de um sistema elétrico, operando com segurança e eficiência. Esse processo envolve calcular as capacidades elétricas adequadas.')
-st.subheader(':blue[𝟐.] 𝐂𝐮𝐫𝐯𝐚 𝐝𝐚 𝐂𝐨𝐫𝐫𝐞𝐧𝐭𝐞 𝐝𝐞 𝐌𝐚𝐠𝐧𝐞𝐭𝐢𝐳𝐚𝐜̧𝐚̃𝐨')
+
+st.subheader(':blue[𝟐.] 𝐂𝐮𝐫𝐯𝐚 𝐝𝐚 𝐂𝐨𝐫𝐫𝐞𝐧𝐭𝐞 𝐝𝐞 𝐌𝐚𝐠𝐧𝐞𝐭𝐢𝐳𝐚çã𝐨')
 st.markdown('A curva de corrente de magnetização ao longo do tempo é crucial para: Identificar picos de corrente, ajustar para evitar sobrecargas, calcular perdas no núcleo, estabilizar o sistema, prever comportamento em falhas e configurar proteções adequadas')
-st.subheader(':blue[𝟑.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐞 𝐏𝐚𝐫𝐚̂𝐦𝐞𝐭𝐫𝐨𝐬 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
+
+st.subheader(':blue[𝟑.] 𝐂á𝐥𝐜𝐮𝐥𝐨 𝐝𝐞 𝐏𝐚𝐫â𝐦𝐞𝐭𝐫𝐨𝐬 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('''A determinação dos parâmetros do transformador monofásico é realizada através dos ensaios 
 de circuito aberto e curto-circuito, usando os valores de tensão, corrente e potência. Esses ensaios permitem 
 calcular os parâmetros do transformador, como resistência e reatância, além de obter suas características fasoriais.''')
-st.subheader(':blue[𝟒.] 𝐂𝐚́𝐥𝐜𝐮𝐥𝐨 𝐝𝐚 𝐑𝐞𝐠𝐮𝐥𝐚𝐜̧𝐚̃𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
+
+st.subheader(':blue[𝟒.] 𝐂á𝐥𝐜𝐮𝐥𝐨 𝐝𝐚 𝐑𝐞𝐠𝐮𝐥𝐚çã𝐨 𝐝𝐨 𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫')
 st.markdown('Calcular a regulação de um transformador é fundamental para garantir que ele funcione eficientemente em diversas condições de carga, assegurando a qualidade da energia, otimizando o desempenho do sistema e permitindo um planejamento de manutenção mais eficaz. ')
