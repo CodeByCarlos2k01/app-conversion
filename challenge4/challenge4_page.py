@@ -78,9 +78,17 @@ if (challenge4_button or st.session_state['challenge4']):
                 fp_sign = '+'
                 i_carga_complexa = i_carga * (fp_carga + 1j * np.sqrt(1 - fp_carga**2))
 
-            fase_i_carga_graus = np.degrees(np.angle(i_carga_complexa))
+            queda_tensao_resistiva = i_carga_complexa * z_eq_real
 
-            queda_tensao = i_carga_complexa * z_eq  # (ΔV)
+            # queda de tensão reativa (imaginária)
+            queda_tensao_reativa = i_carga_complexa * z_eq_imag
+
+            # queda de tensão total
+            queda_tensao = queda_tensao_resistiva + 1j * queda_tensao_reativa
+            
+            # queda_tensao = i_carga_complexa * z_eq  # (ΔV)
+
+            fase_i_carga_graus = np.degrees(np.angle(i_carga_complexa))
 
             # tensão secundária em carga
             v_full_load = v_secundaria  # - queda_tensao (análise habitual de transformador de boa qualidade)
