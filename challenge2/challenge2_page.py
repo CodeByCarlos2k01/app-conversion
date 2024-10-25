@@ -3,11 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import streamlit as st
 
+# Nome do caminho do arquivo
+path = 'challenge2/models/MagCurve-3.xlsx'
+
+# Carregar os dados de fluxo (proporcional a B) e MMF (proporcional a H) do arquivo Excel
+data = pd.read_excel(path)
+
 if 'challenge2' not in st.session_state:
     st.session_state['challenge2'] = False
     st.session_state['challenge2_Vp'] = 0.0
     st.session_state['challenge2_Np'] = 0.0
     st.session_state['challenge2_freq'] = 0.0
+    st.session_state['challenge2_Pt'] = 1 / 3000
+    st.session_state['challenge2_Lt'] = 340e-3
 
 st.title(':blue[𝐒𝐞çã𝐨 𝟐]')
 
@@ -29,17 +37,74 @@ st.title('Dados de Entrada')
 with st.form('challenge2_form'):
     # Inputs interativos no Streamlit com valores padrão usando session_state
     st.subheader('Tensão primária')
-    Vp = st.number_input('Informe a Tensão Primária (Vp) em Volts', min_value=0.0, step=10.0)
+    Vp = st.number_input(
+        'Informe a Tensão Primária (Vp) em Volts', 
+        min_value=0.0, 
+        step=10.00,  
+        format="%.4f"  # Formato para 4 casas decimais
+    )
     Vp = st.session_state['challenge2_Vp'] if Vp == 0 else Vp
 
     st.subheader('Frequência')
-    freq = st.number_input('Informe a Frequência (Hz)', min_value=0.0, step=10.0)
+    freq = st.number_input(
+        'Informe a Frequência (Hz)', 
+        min_value=0.0, 
+        step=10.00,  
+        format="%.4f"  # Exibir 4 casas decimais
+    )
     freq = st.session_state['challenge2_freq'] if freq == 0 else freq
-    
+
     st.subheader('Número de espiras')
-    Np = st.number_input('Informe o Número de Espiras no Primário (Np)', min_value=0.0, step=10.0)
+    Np = st.number_input(
+        'Informe o Número de Espiras no Primário (Np)', 
+        min_value=0.0, 
+        step=10.00, 
+    )
     Np = st.session_state['challenge2_Np'] if Np == 0 else Np
 
+    st.subheader('Passo de Tempo')
+    Pt = st.number_input(
+        'Informe o Passo de Tempo em Milisegundos', 
+        min_value=1 / 3000, 
+        step=1 / 3000, 
+        format="%.6f"  # Exibir até 6 casas decimais
+    )
+    Pt = st.session_state['challenge2_Pt'] if Pt == 0 else Pt
+
+    st.subheader('Limite de Tempo')
+    Lt = st.number_input(
+        'Informe o Intervalo de Tempo em Milisegundos', 
+        min_value=340e-3, 
+        step=340e-3, 
+        format="%.6f"  # Exibir até 6 casas decimais
+    )
+    Lt = st.session_state['challenge2_Lt'] if Lt == 0 else Lt
+
+    # Upload do arquivo
+    uploaded_file = st.file_uploader("Opcional: Escolha um arquivo Excel com os campos de Fluxo e MMF", type=["xlsx"])
+        
+    # Verifica se o arquivo foi carregado
+    if uploaded_file is not None:
+        try:
+            # Tenta ler o arquivo Excel
+            data = pd.read_excel(uploaded_file)
+                
+            # Verifica se as colunas 'Fluxo' e 'MMF' estão presentes
+            if 'Fluxo' in data.columns and 'MMF' in data.columns:
+                st.success('O arquivo contém as colunas necessárias: Fluxo e MMF.')
+
+                # Carregar os dados de fluxo (proporcional a B) e MMF (proporcional a H) do arquivo Excel
+                flux_data = data['Fluxo']
+                mmf_data = data['MMF']
+
+                # (O código da aplicação continua a partir daqui...)
+                # Seus cálculos e plotagens podem continuar como anteriormente
+                    
+            else:
+                st.error("O arquivo não contém as colunas necessárias: 'Fluxo' e 'MMF'. Por favor, faça o upload de um arquivo válido.")
+        except Exception as e:
+            st.error(f"Ocorreu um erro ao processar o arquivo: {e}")
+    
     challenge2_button = st.form_submit_button('Gerar Resultado')
 
 if (challenge2_button or st.session_state['challenge2']):
@@ -50,12 +115,9 @@ if (challenge2_button or st.session_state['challenge2']):
             st.session_state['challenge2_Vp'] = Vp
             st.session_state['challenge2_Np'] = Np
             st.session_state['challenge2_freq'] = freq
+            st.session_state['challenge2_Pt'] = Pt
+            st.session_state['challenge2_Lt'] = Lt
 
-            # Nome do caminho do arquivo
-            path = 'challenge2/models/MagCurve-3.xlsx'
-
-            # Carregar os dados de fluxo (proporcional a B) e MMF (proporcional a H) do arquivo Excel
-            data = pd.read_excel(path)
             flux_data = data['Fluxo']
             mmf_data = data['MMF']
 
@@ -66,8 +128,8 @@ if (challenge2_button or st.session_state['challenge2']):
             omega = 2 * np.pi * freq
 
             # Definir o intervalo de tempo para simulação
-            t_final = 340e-3
-            t_step = 1 / 3000
+            t_final = Lt
+            t_step = Pt
             time = np.arange(0, t_final, t_step)
 
             # Calcular fluxo magnético (proporcional a B) em função do tempo
