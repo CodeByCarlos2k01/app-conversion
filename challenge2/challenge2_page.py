@@ -96,9 +96,6 @@ with st.form('challenge2_form'):
                 # Carregar os dados de fluxo (proporcional a B) e MMF (proporcional a H) do arquivo Excel
                 flux_data = data['Fluxo']
                 mmf_data = data['MMF']
-
-                # (O código da aplicação continua a partir daqui...)
-                # Seus cálculos e plotagens podem continuar como anteriormente
                     
             else:
                 st.error("O arquivo não contém as colunas necessárias: 'Fluxo' e 'MMF'. Por favor, faça o upload de um arquivo válido.")
