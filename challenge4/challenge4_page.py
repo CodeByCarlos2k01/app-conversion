@@ -167,6 +167,24 @@ if (challenge4_button or st.session_state['challenge4']):
                 fator_escala = 1.5
             ax_normalizado.quiver(0, 0, fator_escala * i_carga * np.cos(angulo_ic_rad), fator_escala * i_carga * np.sin(angulo_ic_rad), angles='xy', scale_units='xy', scale=1, color='r', label='Corrente', linewidth=2)
 
+            x_resistiva = fator_escala * queda_tensao_resistiva * np.cos(angulo_ic_rad)
+            y_resistiva = fator_escala * queda_tensao_resistiva * np.sin(angulo_ic_rad)
+
+            # Desenha o vetor da queda de tensão resistiva (do centro)
+            ax_normalizado.quiver(0, 0, x_resistiva, y_resistiva, 
+                      angles='xy', scale_units='xy', scale=1, color='blue', label='Queda de Tensão Resistiva (ΔV_R)', linewidth=2)
+
+
+            angulo_reativo_rad = angulo_ic_rad + np.pi / 2  # Defasado em 90º
+
+            # Desenha o vetor da queda de tensão reativa a partir do final da queda resistiva
+            ax_normalizado.quiver(x_resistiva, y_resistiva, 
+                      fator_escala * queda_tensao_reativa * np.cos(angulo_reativo_rad), 
+                      fator_escala * queda_tensao_reativa * np.sin(angulo_reativo_rad), 
+                      angles='xy', scale_units='xy', scale=1, color='green', label='Queda de Tensão Reativa (ΔV_X)', linewidth=2)
+
+
+
             # cálculo dos ângulos dos vetores de tensão
             angulo_v_secundaria_rad = np.angle(v_secundaria)
             angulo_v_no_load_rad = np.angle(v_no_load)
