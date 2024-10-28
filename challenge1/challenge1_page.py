@@ -5,12 +5,12 @@ import math
 
 # Inicializando o estado da sessão para armazenar dados persistentes entre interações.
 if 'challenge1' not in st.session_state:
-    st.session_state['challenge1'] = False
+    st.session_state['challenge1']            = False
     st.session_state['challenge1_circuito_p'] = 1
     st.session_state['challenge1_circuito_s'] = 1
-    st.session_state['challenge1_Vp2'] = 0.0
-    st.session_state['challenge1_Vs2'] = 0.0
-    st.session_state['challenge1_Ws'] = 0.0
+    st.session_state['challenge1_Vp2']        = 0.0
+    st.session_state['challenge1_Vs2']        = 0.0
+    st.session_state['challenge1_Ws']         = 0.0
 
 # Tabelas com dados de laminas e condutores, usadas para cálculos posteriores
 laminas = pd.DataFrame(data={'a'    : [1.5, 2, 2.5, 3, 3.5, 4, 5], 
@@ -80,27 +80,30 @@ st.title('Dados de entrada')
 
 # Formulário para inserir os dados
 with st.form('challenge1_form'):
+    
     st.subheader('Tensão Primária')
 
     # Coletando a tensão primária e o número de circuitos no primário
     col1, col2 = st.columns(2)
     Vp2 = col1.number_input("Informe a Tensão Primária em Volts", min_value = 0.0, step=10.0)
     circuito_p = col2.radio("Informe o Número de Circuitos no Primário", (1, 2))
-    (circuito_p, Vp2) = (st.session_state['challenge1_circuito_p'], st.session_state['challenge1_Vp2']) if Vp2 == 0 else (circuito_p, Vp2)
-
+    
     st.subheader('Tensão Secundária')
 
     # Coletando a tensão secundária e o número de circuitos no secundário
     col1, col2 = st.columns(2)
     Vs2 = col1.number_input("Informe a Tensão Secundária em Volts", min_value = 0.0, step=10.0)
     circuito_s = col2.radio("Informe o Número de Circuitos no Secundário", (1, 2))
-    (circuito_s, Vs2) = (st.session_state['challenge1_circuito_s'], st.session_state['challenge1_Vs2']) if Vs2 == 0 else (circuito_s, Vs2)
-
+    
     st.subheader('Potência da Carga')
 
     # Coletando a potência da carga em VA/W
     Ws = st.number_input("Informe a Potência da carga em Volt-Ampere", min_value = 0.0, max_value = 800.0, step=10.0)
-    Ws = st.session_state['challenge1_Ws'] if Ws == 0 else Ws
+
+    if circuito_p == 1 and circuito_s == 1 and Vp2 == 0 and Vs2 == 0 and Ws == 0:
+        circuito_p, Vp2 = st.session_state['challenge1_circuito_p'], st.session_state['challenge1_Vp2']
+        circuito_s, Vs2 = st.session_state['challenge1_circuito_s'], st.session_state['challenge1_Vs2']
+        Ws = st.session_state['challenge1_Ws']
 
     # Submissão do formulário
     challenge1_button = st.form_submit_button('Gerar Resultado')
@@ -317,86 +320,89 @@ if st.session_state['challenge1']:
             # Análise da possibilidade de execução
             st.write('-𝐏𝐨𝐬𝐬𝐢𝐛𝐢𝐥𝐢𝐝𝐚𝐝𝐞 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮çã𝐨:')
             Sj = laminas['secao'][n_lamina]
-            st.write(f'Observa-se que a lâmina padronizada **𝐧.º {n_lamina}** tem a janela com **𝐒ᴊ = {Sj} 𝐦𝐦²**, assim sendo, a relação')
+            st.write(f'Observa-se que a lâmina padronizada **𝐧.º {n_lamina}** tem a janela com **𝐒ᴊ = {Sj} 𝐦𝐦²**, assim sendo, a relação:')
             relacao = round(Sj / Scu, 2)
             st.latex(fr'\frac{{S_{{j}}}}{{S_{{cu}}}} = \frac{{{Sj}}}{{{Scu}}} = {{{relacao}}}')
             
             # Verificação da relação para a execução do transformador
             if relacao >= 3:
                 st.write('fornece um resultado 𝐦𝐚𝐢𝐨𝐫 𝐪𝐮𝐞 𝟑, o que indica que o :green[𝐭𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 é 𝐞𝐱𝐞𝐜𝐮𝐭á𝐯𝐞𝐥].')
+                st.divider()
 
-            st.divider()
+                # Cálculo do peso do ferro
+                st.write('-𝐏𝐞𝐬𝐨 𝐝𝐨 𝐟𝐞𝐫𝐫𝐨:')
+                peso = laminas['peso'][n_lamina]
+                st.write(f'Observa-se que cada centímetro de núcleo feito com a lâmina padronizada **𝐧.º {n_lamina}** pesa **{peso} 𝐤𝐠**. Sendo assim, o peso do núcleo resulta:')
+                Pfe = round(peso * b, 2)
+                st.latex(fr'P_{{fe}} = {{{peso}}} \cdot {{{b}}} = {{{Pfe}}} \ kg')
+                st.divider()
 
-            # Cálculo do peso do ferro
-            st.write('-𝐏𝐞𝐬𝐨 𝐝𝐨 𝐟𝐞𝐫𝐫𝐨:')
-            peso = laminas['peso'][n_lamina]
-            st.write(f'Observa-se que cada centímetro de núcleo feito com a lâmina padronizada **𝐧.º {n_lamina}** pesa **{peso} 𝐤𝐠**. Sendo assim, o peso do núcleo resulta:')
-            Pfe = round(peso * b, 2)
-            st.latex(fr'P_{{fe}} = {{{peso}}} \cdot {{{b}}} = {{{Pfe}}} \ kg')
-            st.divider()
+                # Cálculo do peso do cobre
+                st.write('-𝐏𝐞𝐬𝐨 𝐝𝐨 𝐜𝐨𝐛𝐫𝐞:')
+                st.write('O comprimeto da espira média do cobre resulta:')
+                lm = round(2 * a + 2 * b + 0.5 * a * 3.14, 2)
+                st.latex(fr'lm = 2a + 2b + 0,5aπ = {{{lm}}} \ cm')
+                st.write('de onde:')
+                Pcu = round(Scu * lm * 9 / 100 / 1000, 2)
+                st.latex(fr'P_{{cu}} = \frac{{S_{{cu}}}}{{100}} \cdot lm \cdot 9 = \frac{{{Scu}}}{{{100}}} \cdot {{{lm}}} \cdot 9 = {{{Pcu * 1000}}} \ g =~ {{{Pcu}}} \ kg')
+                st.divider()
 
-            # Cálculo do peso do cobre
-            st.write('-𝐏𝐞𝐬𝐨 𝐝𝐨 𝐜𝐨𝐛𝐫𝐞:')
-            st.write('O comprimeto da espira média do cobre resulta:')
-            lm = round(2 * a + 2 * b + 0.5 * a * 3.14, 2)
-            st.latex(fr'lm = 2a + 2b + 0,5aπ = {{{lm}}} \ cm')
-            st.write('de onde:')
-            Pcu = round(Scu * lm * 9 / 100 / 1000, 2)
-            st.latex(fr'P_{{cu}} = \frac{{S_{{cu}}}}{{100}} \cdot lm \cdot 9 = \frac{{{Scu}}}{{{100}}} \cdot {{{lm}}} \cdot 9 = {{{Pcu * 1000}}} \ g =~ {{{Pcu}}} \ kg')
-            st.divider()
+                # Cálculo das perdas no ferro
+                st.write('-𝐏𝐞𝐫𝐝𝐚𝐬 𝐧𝐨 𝐟𝐞𝐫𝐫𝐨:')
+                st.write(f'O núcleo do transformador pesa **{Pfe} 𝐤𝐠**.')
+                st.write('A perda específica das lâminas Acesita 145, para a indução **𝐁𝐦 = 𝟏𝟏.𝟑𝟎𝟎** e **𝐟 = 𝟓𝟎 𝐇𝐳** resulta:')
+                wfe = 1.72
+                st.latex(fr'w_{{Fe}} = 1,35 \cdot ( \frac{{11.300}}{{10,000}} )² = {{{wfe}}}')
+                st.write('As perdas do núcleo do transformador, resultam:')
+                Wfe = round(1.15 * wfe * Pfe, 2)
+                st.latex(fr'W_{{Fe}} = 1,15 \cdot w_{{Fe}} \cdot P_{{fe}} = 1,15 \cdot {{{wfe}}} \cdot {{{Pfe}}} = {{{Wfe}}} \ watts')
+                st.divider()
 
-            # Cálculo das perdas no ferro
-            st.write('-𝐏𝐞𝐫𝐝𝐚𝐬 𝐧𝐨 𝐟𝐞𝐫𝐫𝐨:')
-            st.write(f'O núcleo do transformador pesa **{Pfe} 𝐤𝐠**.')
-            st.write('A perda específica das lâminas Acesita 145, para a indução **𝐁𝐦 = 𝟏𝟏.𝟑𝟎𝟎** e **𝐟 = 𝟓𝟎 𝐇𝐳** resulta:')
-            wfe = 1.72
-            st.latex(fr'w_{{Fe}} = 1,35 \cdot ( \frac{{11.300}}{{10,000}} )² = {{{wfe}}}')
-            st.write('As perdas do núcleo do transformador, resultam:')
-            Wfe = round(1.15 * wfe * Pfe, 2)
-            st.latex(fr'W_{{Fe}} = 1,15 \cdot w_{{Fe}} \cdot P_{{fe}} = 1,15 \cdot {{{wfe}}} \cdot {{{Pfe}}} = {{{Wfe}}} \ watts')
-            st.divider()
+                # Cálculo das perdas no cobre
+                st.write('-𝐏𝐞𝐫𝐝𝐚𝐬 𝐧𝐨 𝐜𝐨𝐛𝐫𝐞:')
+                st.write(f'Foi calculada anteriormente a densidade média de corrente no cobre, resultando de **{d_mean} 𝐀/𝐦𝐦²**. Assim sendo, a perda específica no cobre resulta:')
+                wcu = round(2.43 * d_mean ** 2, 2)
+                st.latex(fr'w_{{cu}} = 2,43 \cdot d² = 2,43 \cdot {{{d_mean}}}² = {{{wcu}}} \ W/kg')
+                
+                # Cálculo das perdas no transformador
+                st.write(f'As perdas no cobre do transformador resultam:')
+                Wcu = round(wcu * Pcu, 2)
+                st.latex(fr'W_{{cu}} = w_{{cu}} \cdot P_{{cu}} = {{{wcu}}} \cdot {{{Pcu}}} = {{{Wcu}}} \ watts')
+                st.divider()
 
-            # Cálculo das perdas no cobre
-            st.write('-𝐏𝐞𝐫𝐝𝐚𝐬 𝐧𝐨 𝐜𝐨𝐛𝐫𝐞:')
-            st.write(f'Foi calculada anteriormente a densidade média de corrente no cobre, resultando de **{d_mean} 𝐀/𝐦𝐦²**. Assim sendo, a perda específica no cobre resulta:')
-            wcu = round(2.43 * d_mean ** 2, 2)
-            st.latex(fr'w_{{cu}} = 2,43 \cdot d² = 2,43 \cdot {{{d_mean}}}² = {{{wcu}}} \ W/kg')
-            
-            # Cálculo das perdas no transformador
-            st.write(f'As perdas no cobre do transformador resultam:')
-            Wcu = round(wcu * Pcu, 2)
-            st.latex(fr'W_{{cu}} = w_{{cu}} \cdot P_{{cu}} = {{{wcu}}} \cdot {{{Pcu}}} = {{{Wcu}}} \ watts')
-            st.divider()
+                # Cálculo do rendimento do transformador
+                st.write('-𝐑𝐞𝐧𝐝𝐢𝐦𝐞𝐧𝐭𝐨 𝐝𝐨 𝐭𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫:')
+                u = round(Ws / (Ws + Wfe + Wcu), 2)
+                st.latex(fr'µ = \frac{{W_{2}}}{{W_{1}}} = \frac{{W_{2}}}{{W_{2} + W_{{fe}} + W_{{cu}}}} = \frac{{{Ws}}}{{{Ws} + {Wfe} + {Wcu}}} = {{{u}}}')
+                st.divider()
 
-            # Cálculo do rendimento do transformador
-            st.write('-𝐑𝐞𝐧𝐝𝐢𝐦𝐞𝐧𝐭𝐨 𝐝𝐨 𝐭𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫:')
-            u = round(Ws / (Ws + Wfe + Wcu), 2)
-            st.latex(fr'µ = \frac{{W_{2}}}{{W_{1}}} = \frac{{W_{2}}}{{W_{2} + W_{{fe}} + W_{{cu}}}} = \frac{{{Ws}}}{{{Ws} + {Wfe} + {Wcu}}} = {{{u}}}')
-            st.divider()
-
-            # Exibindo todos os valores calculados
-            st.write('A fim de se anotarem os valores obtidos no cálculo de forma ordenada, serão distribuídos conforme indicado a seguir:')
-            st.latex('𝐅𝐎𝐋𝐇𝐀 \ 𝐃𝐄 \ 𝐂𝐀́𝐋𝐂𝐔𝐋𝐎 \ 𝐃𝐎 \ 𝐓𝐑𝐀𝐍𝐒𝐅𝐎𝐑𝐌𝐀𝐃𝐎𝐑')
-            st.write(f'𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐦𝐨𝐧𝐨𝐟á𝐬𝐢𝐜𝐨: 𝐟 = 𝟓𝟎 𝐇𝐳; 𝐖₂ = {Ws} 𝐕𝐀; 𝐕₁ = [{Vp1}, {Vp2}] 𝐕; 𝐕₂ = [{Vs1}, {Vs2}] 𝐕')
-            st.latex(fr'W_{1} = {{{Wp}}} \ | \ V_{1} = {{{Vp2}}} \ | \ I_{1} = {Ip2} \ A \ | \ S_{1} = {{{Sp2}}} \ | \ fio \ {n_awg12} \ ({secao12} \ mm²)')
-            if cond1:
-                st.latex(fr'I_{1} = {Ip1} \ A \ | \ S_{1} = {{{Sp1}}} \ | \ fio \ {n_awg11} \ ({secao11} \ mm²)')
-            st.latex(fr'W_{2} = {{{Ws}}} \ | \ V_{2} = {{{Vs2}}} \ | \ I_{2} = {Is2} \ A \ | \ S_{2} = {{{Ss2}}} \ | \ fio \ {n_awg22} \ ({secao22} \ mm²)')
-            if cond2:
-                st.latex(fr'I_{2} = {Is1} \ A \ | \ S_{2} = {{{Ss1}}} \ | \ fio \ {n_awg21} \ ({secao21} \ mm²)')
-            st.latex(fr'S_{{m}} = {{{Sm}}} \ cm² \ | \ S_{{g}} = {{{Sg}}} \ cm² \ | \ usa-se \ lâmina \ n.º \ {{{n_lamina}}}')
-            st.latex(fr'Núcleo \ central \ [{{{a}}}] \ X \ [{{{b}}}]')
-            st.latex(fr'b_{{mag}} = {{{b_mag}}} \ cm; \quad N_{{laminas}} = {{{n_laminas}}} \ Laminas')
-            st.latex(fr'Esp/volt = {{{Esp_Volt}}}')
-            st.latex(fr'N_{1} = {{{Np}}} \ Espiras / circuito')
-            st.latex(fr'N_{2} = {{{Ns}}} \ Espiras / circuito')
-            st.latex(fr'S_{{cu}} = {{{Scu}}} \ cm²')
-            st.latex(fr'\frac{{S_{{j}}}}{{S_{{cu}}}} = {{{relacao}}}')
-            st.latex(fr'P_{{fe}} = {{{Pfe}}} \ kg')
-            st.latex(fr'lm = {{{lm}}} \ cm')
-            st.latex(fr'P_{{cu}} = {{{Pcu}}} \ kg')
-            st.latex(fr'W_{{fe}} = {{{Wfe}}} \ watts')
-            st.latex(fr'W_{{cu}} = {{{Wcu}}} \ watts')
-            st.latex(fr'Rendimento = {{{u}}}')
+                # Exibindo todos os valores calculados
+                st.write('A fim de se anotarem os valores obtidos no cálculo de forma ordenada, serão distribuídos conforme indicado a seguir:')
+                st.latex('𝐅𝐎𝐋𝐇𝐀 \ 𝐃𝐄 \ 𝐂𝐀́𝐋𝐂𝐔𝐋𝐎 \ 𝐃𝐎 \ 𝐓𝐑𝐀𝐍𝐒𝐅𝐎𝐑𝐌𝐀𝐃𝐎𝐑')
+                st.write(f'𝐓𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐦𝐨𝐧𝐨𝐟á𝐬𝐢𝐜𝐨: 𝐟 = 𝟓𝟎 𝐇𝐳; 𝐖₂ = {Ws} 𝐕𝐀; 𝐕₁ = [{Vp1}, {Vp2}] 𝐕; 𝐕₂ = [{Vs1}, {Vs2}] 𝐕')
+                st.latex(fr'W_{1} = {{{Wp}}} \ | \ V_{1} = {{{Vp2}}} \ | \ I_{1} = {Ip2} \ A \ | \ S_{1} = {{{Sp2}}} \ | \ fio \ {n_awg12} \ ({secao12} \ mm²)')
+                if cond1:
+                    st.latex(fr'I_{1} = {Ip1} \ A \ | \ S_{1} = {{{Sp1}}} \ | \ fio \ {n_awg11} \ ({secao11} \ mm²)')
+                st.latex(fr'W_{2} = {{{Ws}}} \ | \ V_{2} = {{{Vs2}}} \ | \ I_{2} = {Is2} \ A \ | \ S_{2} = {{{Ss2}}} \ | \ fio \ {n_awg22} \ ({secao22} \ mm²)')
+                if cond2:
+                    st.latex(fr'I_{2} = {Is1} \ A \ | \ S_{2} = {{{Ss1}}} \ | \ fio \ {n_awg21} \ ({secao21} \ mm²)')
+                st.latex(fr'S_{{m}} = {{{Sm}}} \ cm² \ | \ S_{{g}} = {{{Sg}}} \ cm² \ | \ usa-se \ lâmina \ n.º \ {{{n_lamina}}}')
+                st.latex(fr'Núcleo \ central \ [{{{a}}}] \ X \ [{{{b}}}]')
+                st.latex(fr'b_{{mag}} = {{{b_mag}}} \ cm; \quad N_{{laminas}} = {{{n_laminas}}} \ Laminas')
+                st.latex(fr'Esp/volt = {{{Esp_Volt}}}')
+                st.latex(fr'N_{1} = {{{Np}}} \ Espiras / circuito')
+                st.latex(fr'N_{2} = {{{Ns}}} \ Espiras / circuito')
+                st.latex(fr'S_{{cu}} = {{{Scu}}} \ cm²')
+                st.latex(fr'\frac{{S_{{j}}}}{{S_{{cu}}}} = {{{relacao}}}')
+                st.latex(fr'P_{{fe}} = {{{Pfe}}} \ kg')
+                st.latex(fr'lm = {{{lm}}} \ cm')
+                st.latex(fr'P_{{cu}} = {{{Pcu}}} \ kg')
+                st.latex(fr'W_{{fe}} = {{{Wfe}}} \ watts')
+                st.latex(fr'W_{{cu}} = {{{Wcu}}} \ watts')
+                st.latex(fr'Rendimento = {{{u}}}')
+            else:
+                st.write('fornece um resultado 𝐦𝐞𝐧𝐨𝐫 𝐪𝐮𝐞 𝟑, o que indica que o :red[𝐭𝐫𝐚𝐧𝐬𝐟𝐨𝐫𝐦𝐚𝐝𝐨𝐫 𝐧ã𝐨 é 𝐞𝐱𝐞𝐜𝐮𝐭á𝐯𝐞𝐥].')
+                st.divider()
+                st.write('Nesse caso, não é possível projetar o transformador usando 𝐥â𝐦𝐢𝐧𝐚𝐬 𝐩𝐚𝐝𝐫𝐨𝐧𝐢𝐳𝐚𝐝𝐚𝐬. Então seria necessário usar abordagens alternativas, como por exemplo 𝐥â𝐦𝐢𝐧𝐚𝐬 𝐜𝐨𝐦𝐩𝐫𝐢𝐝𝐚𝐬.')
         except:
             st.error(':blue[𝐎𝐜𝐨𝐫𝐫𝐞𝐮 𝐮𝐦 𝐞𝐫𝐫𝐨 𝐝𝐞 𝐞𝐱𝐞𝐜𝐮çã𝐨 𝐩𝐨𝐫 𝐪𝐮𝐞 𝐝𝐚𝐝𝐨𝐬 𝐝𝐞 𝐞𝐧𝐭𝐫𝐚𝐝𝐚 𝐢𝐧𝐯á𝐥𝐢𝐝𝐨𝐬 𝐟𝐨𝐫𝐚𝐦 𝐟𝐨𝐫𝐧𝐞𝐜𝐢𝐝𝐨𝐬.]')

@@ -32,34 +32,35 @@ with st.form(key='input_form'):
     st.subheader('Insira os Parâmetros do Transformador')
     col1, col2, col3 = st.columns(3)
     v_secundaria = col1.number_input('Tensão Nominal Secundária (𝐕)', min_value=0.0, step=10.0)  # V
-    v_secundaria = st.session_state['challenge4_v_secundaria'] if v_secundaria == 0 else v_secundaria
-    
     z_eq_real = col2.number_input('Resistência Equivalente (𝐎𝐡𝐦𝐬)', min_value=0.0, step=0.01)  # real da impedância
-    z_eq_real = st.session_state['challenge4_z_eq_real'] if z_eq_real == 0 else z_eq_real
-
     z_eq_imag = col3.number_input('Reatância Equivalente (𝐎𝐡𝐦𝐬)', min_value=0.0, step=0.01)  # imag da impedância
-    z_eq_imag = st.session_state['challenge4_z_eq_imag'] if z_eq_imag == 0 else z_eq_imag
-
+    
     st.subheader('Insira os Parâmetros da Carga')
     col1, col2, col3 = st.columns(3)
     p_carga = col1.number_input('Potência da Carga (𝐕𝐀)', min_value=0.0, step=100.0)  # VA
-    p_carga = st.session_state['challenge4_p_carga'] if p_carga == 0 else p_carga
-
     fp_carga = col2.number_input('Fator de Potência da Carga [𝟎 𝐚 𝟏]', min_value=0.0, max_value=1.0, step=0.01)
     fp_tipo  = col3.radio("Tipo de Fator de Potência:", ("Atrasado", "Adiantado"))
-    (fp_carga, fp_tipo) = (st.session_state['challenge4_fp_carga'], st.session_state['challenge4_fp_tipo']) if fp_carga == 0 else (fp_carga, fp_tipo)
+    
+    if v_secundaria == 0 and z_eq_real == 0 and z_eq_imag == 0 and p_carga == 0 and fp_carga == 0 and fp_tipo == "Atrasado":
+        v_secundaria = st.session_state['challenge4_v_secundaria']
+        z_eq_real    = st.session_state['challenge4_z_eq_real']
+        z_eq_imag    = st.session_state['challenge4_z_eq_imag']    
+        p_carga      = st.session_state['challenge4_p_carga']      
+        fp_carga     = st.session_state['challenge4_fp_carga']     
+        fp_tipo      = st.session_state['challenge4_fp_tipo']      
 
     challenge4_button = st.form_submit_button(label='Gerar Resultado')
 
-if (challenge4_button or st.session_state['challenge4']):
-    st.session_state['challenge4']              = True
-    st.session_state['challenge4_v_secundaria'] = v_secundaria
-    st.session_state['challenge4_z_eq_real']    = z_eq_real
-    st.session_state['challenge4_z_eq_imag']    = z_eq_imag
-    st.session_state['challenge4_p_carga']      = p_carga
-    st.session_state['challenge4_fp_carga']     = fp_carga
-    st.session_state['challenge4_fp_tipo']      = fp_tipo
+    if challenge4_button:
+        st.session_state['challenge4']              = True
+        st.session_state['challenge4_v_secundaria'] = v_secundaria
+        st.session_state['challenge4_z_eq_real']    = z_eq_real
+        st.session_state['challenge4_z_eq_imag']    = z_eq_imag
+        st.session_state['challenge4_p_carga']      = p_carga
+        st.session_state['challenge4_fp_carga']     = fp_carga
+        st.session_state['challenge4_fp_tipo']      = fp_tipo
 
+if st.session_state['challenge4']:
     st.title('Resultado')
     with st.expander('Passo a Passo da Resolução', expanded=True):
         try:

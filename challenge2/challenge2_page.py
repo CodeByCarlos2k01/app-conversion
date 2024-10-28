@@ -40,19 +40,15 @@ with st.form('challenge2_form'):
     Vp = st.number_input(
         'Informe a Tensão Primária (Vp) em Volts', 
         min_value=0.0, 
-        step=10.00,  
-        format="%.4f"  # Formato para 4 casas decimais
+        step=10.00
     )
-    Vp = st.session_state['challenge2_Vp'] if Vp == 0 else Vp
 
     st.subheader('Frequência')
     freq = st.number_input(
         'Informe a Frequência (Hz)', 
         min_value=0.0, 
-        step=10.00,  
-        format="%.4f"  # Exibir 4 casas decimais
+        step=10.00
     )
-    freq = st.session_state['challenge2_freq'] if freq == 0 else freq
 
     st.subheader('Número de espiras')
     Np = st.number_input(
@@ -60,7 +56,6 @@ with st.form('challenge2_form'):
         min_value=0.0, 
         step=10.00, 
     )
-    Np = st.session_state['challenge2_Np'] if Np == 0 else Np
 
     st.subheader('Passo de Tempo')
     Pt = st.number_input(
@@ -69,7 +64,6 @@ with st.form('challenge2_form'):
         step=1 / 3000, 
         format="%.6f"  # Exibir até 6 casas decimais
     )
-    Pt = st.session_state['challenge2_Pt'] if Pt == 0 else Pt
 
     st.subheader('Limite de Tempo')
     Lt = st.number_input(
@@ -78,7 +72,13 @@ with st.form('challenge2_form'):
         step=340e-3, 
         format="%.6f"  # Exibir até 6 casas decimais
     )
-    Lt = st.session_state['challenge2_Lt'] if Lt == 0 else Lt
+
+    if Vp == 0 and Np == 0 and freq == 0 and Pt == 1 / 3000 and Lt == 340e-3:
+        Vp   = st.session_state['challenge2_Vp']
+        Np   = st.session_state['challenge2_Np']
+        freq = st.session_state['challenge2_freq'] 
+        Pt   = st.session_state['challenge2_Pt'] 
+        Lt   = st.session_state['challenge2_Lt'] 
 
     # Upload do arquivo
     uploaded_file = st.file_uploader("Opcional: Escolha um arquivo Excel com os campos de Fluxo e MMF", type=["xlsx"])
@@ -104,17 +104,18 @@ with st.form('challenge2_form'):
     
     challenge2_button = st.form_submit_button('Gerar Resultado')
 
-if (challenge2_button or st.session_state['challenge2']):
+    if challenge2_button:
+        st.session_state['challenge2']      = True
+        st.session_state['challenge2_Vp']   = Vp
+        st.session_state['challenge2_Np']   = Np
+        st.session_state['challenge2_freq'] = freq
+        st.session_state['challenge2_Pt']   = Pt
+        st.session_state['challenge2_Lt']   = Lt
+
+if st.session_state['challenge2']:
     st.title('Resultado')
     with st.expander('Passo a Passo da Resolução', expanded=True):
         try:
-            st.session_state['challenge2'] = True
-            st.session_state['challenge2_Vp'] = Vp
-            st.session_state['challenge2_Np'] = Np
-            st.session_state['challenge2_freq'] = freq
-            st.session_state['challenge2_Pt'] = Pt
-            st.session_state['challenge2_Lt'] = Lt
-
             flux_data = data['Fluxo']
             mmf_data = data['MMF']
 
